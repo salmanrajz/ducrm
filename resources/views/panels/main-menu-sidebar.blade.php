@@ -57,6 +57,16 @@
                         <span class="menu-item text-truncate">Call Center</span>
                     </a>
                 </li>
+                <li class="">
+                    <a href="{{route('plan')}}" class="d-flex align-items-center" target="_self">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="feather feather-circle">
+                            <circle cx="12" cy="12" r="10"></circle>
+                        </svg>
+                        <span class="menu-item text-truncate">Postpaid Plans</span>
+                    </a>
+                </li>
                 @endrole()
                 @role('Sale|Verification')
                                 <li class="">

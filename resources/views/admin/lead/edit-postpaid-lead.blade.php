@@ -103,18 +103,49 @@
                             </div>
                             <div class="col-12">
                                 <div class="mb-1">
-                                    <label class="form-label" for="first-name-icon">Emirate ID</label>
+                                    <label class="form-label" for="first-name-icon">Product Type</label>
                                     <div class="input-group input-group-merge">
-                                        <span class="input-group-text"><i data-feather="user"></i></span>
-                                        <input type="text" id="emirate_id" class="form-control" name="emirate_id"
-                                            placeholder="Emirate ID" required
-                                            data-inputmask="'mask': '999-999-9999999-9'"
-                                            placeholder="XXXXX-XXXXXXX-X"
-                                            value="{{$data->emirate_id}}"
-                                            />
-                                    </div>
+                                        <span class="input-group-text"><i data-feather="map"></i></span>
+                                        <select name="lead_type" id="lead_type" class="is_mnp form-control" required>
+                                            <option value="MNP" {{$data->lead_type == 'MNP' ? 'selected' : ''}}>MNP</option>
+                                            <option value="P2P" {{$data->lead_type == 'P2P' ? 'selected' : ''}}>P2P</option>
+                                        </select> </div>
                                 </div>
                             </div>
+                    <div class="demo-inline-spacing" id="InlineRadioCheck" style="display: {{$data->lead_type == 'P2P' ? 'block' : 'none'}}">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1"
+                            value="option1" {{$data->emirate_id_count == '1' ? 'checked' : ''}} />
+                        <label class="form-check-label" for="inlineRadio1">Full Emirate ID #</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2"
+                            value="option2" {{$data->emirate_id_count == '0' ? 'checked' : ''}} />
+                        <label class="form-check-label" for="inlineRadio2">Last 5 Digit #</label>
+                    </div>
+                </div>
+                <div class="col-12" id="fullemirateid" style="display: {{$data->emirate_id_count == '1' ? 'block' : 'none'}}">
+                    <div class="mb-1">
+                        <label class="form-label" for="first-name-icon">Emirate ID</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text"><i data-feather="user"></i></span>
+                            <input type="text" id="emirate_id" class="form-control" name="emirate_id"
+                                placeholder="Full Emirate ID" required data-inputmask="'mask': '999-9999-9999999-9'"
+                                placeholder="XXXXX-XXXXXXX-X" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12" id="lastfive" style="display: {{$data->emirate_id_count == '0' ? 'block' : 'none'}}">
+                    <div class="mb-1">
+                        <label class="form-label" for="first-name-icon">Emirate ID</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text"><i data-feather="user"></i></span>
+                            <input type="text" id="emirate_id_last_five" class="form-control" name="emirate_id_last_five"
+                                placeholder="Last 5 Emirate ID Digit" required data-inputmask="'mask': '9999-9'"
+                                placeholder="XXXXX-XXXXXXX-X" value="{{$data->emirate_id}}"/>
+                        </div>
+                    </div>
+                </div>
 
                             <div class="col-12">
                                 <div class="mb-1">
@@ -196,17 +227,7 @@
                                         </select> </div>
                                 </div>
                             </div>
-                            <div class="col-12">
-                                <div class="mb-1">
-                                    <label class="form-label" for="first-name-icon">Product Type</label>
-                                    <div class="input-group input-group-merge">
-                                        <span class="input-group-text"><i data-feather="map"></i></span>
-                                        <select name="lead_type" id="lead_type" class="is_mnp form-control" required>
-                                            <option value="MNP" {{$data->lead_type == 'MNP' ? 'selected' : ''}}>MNP</option>
-                                            <option value="P2P" {{$data->lead_type == 'P2P' ? 'selected' : ''}}>P2P</option>
-                                        </select> </div>
-                                </div>
-                            </div>
+
                             <div class="col-12">
                                 <div class="mb-1">
                                     <label class="form-label" for="first-name-icon">Additional Documents</label>

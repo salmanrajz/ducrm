@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\call_center;
+use App\Models\plan;
 use App\Models\product;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -72,6 +73,7 @@ class AdminController extends Controller
         // product::create(['name' => $request->name]);
         return response()->json(['success' => 'Added new records, please wait meanwhile we are redirecting you....!!!']);
     }
+    //
     // Form Layouts
     public function role()
     {
@@ -267,4 +269,79 @@ class AdminController extends Controller
         // product::create(['name' => $request->name]);
         return response()->json(['success' => 'Added new records, please wait meanwhile we are redirecting you....!!!']);
     }
+    // // Form Layouts
+    public function plans()
+    {
+        //
+        $role = plan::all();
+        $breadcrumbs = [
+            ['link' => "/", 'name' => "Home"], ['link' => "javascript:void(0)", 'name' => "Users Role"]
+        ];
+        return view('admin.role.view-plans', compact('breadcrumbs', 'role'));
+        // return view('/content/forms/form-layout', [
+        //     'breadcrumbs' => $breadcrumbs
+        // ]);
+    }
+    //
+    public function plan_edit(Request $request)
+    {
+        //
+        $data = plan::findorfail($request->id);
+        $role = plan::all();
+        $breadcrumbs = [
+            ['link' => "/", 'name' => "Home"], ['link' => "javascript:void(0)", 'name' => "Users Role"]
+        ];
+        return view('admin.role.edit-product', compact('breadcrumbs', 'role', 'data'));
+        // return view('/content/forms/form-layout', [
+        //     'breadcrumbs' => $breadcrumbs
+        // ]);
+    }
+    //
+    public function planadd(Request $request)
+    {
+        // return $request;
+        $validatedData = Validator::make($request->all(), [
+            'plan_name' => 'required|string|unique:plans,plan_name',
+            'local_minutes' => 'required',
+            'data' => 'required',
+            'free_minutes' => 'required',
+            'flexible_minutes' => 'required',
+            'duration' => 'required',
+            'status' => 'required',
+        ]);
+        if ($validatedData->fails()) {
+            return response()->json(['error' => $validatedData->errors()->all()]);
+        }
+
+        plan::create(
+            [
+                'plan_name' => $request->plan_name,
+                'local_minutes' => $request->local_minutes,
+                'flexible_minutes' => $request->flexible_minutes,
+                'data' => $request->data,
+                'free_minutes' => $request->free_minutes,
+                'duration' => $request->duration,
+                'status' => $request->status,
+            ]
+        );
+        return response()->json(['success' => 'Added new records, please wait meanwhile we are redirecting you....!!!']);
+    }
+    public function planedit(Request $request)
+    {
+        // return $request;
+        $validatedData = Validator::make($request->all(), [
+            'name' => 'required|string|unique:roles,name',
+        ]);
+        if ($validatedData->fails()) {
+            return response()->json(['error' => $validatedData->errors()->all()]);
+        }
+        $product = plan::findorfail($request->id);
+        $product->name = $request->name;
+        $product->status = $request->status;
+        $product->save();
+
+        // product::create(['name' => $request->name]);
+        return response()->json(['success' => 'Added new records, please wait meanwhile we are redirecting you....!!!']);
+    }
+    //
 }

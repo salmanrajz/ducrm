@@ -16,17 +16,17 @@
         {{-- {{$data_for_pdf['back']}} --}}
         {{-- {{$data_for_pdf['front']}} --}}
         {{-- {{$data_for_pdf['additional_documents']}} --}}
-        <h3>FRONT ID</h3>
         @if (!empty($data_for_pdf['front']))
+        <h3>FRONT ID</h3>
         <img src="{{public_path('documents/'.$data_for_pdf['front'])}}" alt="" style="width:500px">
         @endif
-        <h3>BACK ID</h3>
         @if (!empty($data_for_pdf['back']))
+        <h3>BACK ID</h3>
         <img src="{{public_path('documents/'.$data_for_pdf['back'])}}" alt="" style="width:500px;">
         @endif
-        <h3>Additional Document</h3>
         @if (!empty($data_for_pdf['additional_documents']))
-            <img src="{{public_path('documents/'.$data_for_pdf['additional_documents'])}}" alt="" style="width:700px;">
+        <h3>Additional Document</h3>
+            <img src="{{public_path('documents/'.$data_for_pdf['additional_documents'])}}" alt="" >
         @endif
     {{-- <img src="{{asset('documents/'.$decoded)}}" alt="" style="width:200px;"> --}}
         {{-- <img src="{{asset('document/'$front)}}" alt=""> --}}

@@ -140,6 +140,7 @@
             <tr>
               <th>id</th>
               <th>Lead #</th>
+              <th>Lead Type</th>
               <th>Name</th>
               <th>Email</th>
               <th>Customer Number</th>
@@ -153,6 +154,7 @@
                 <tr>
                     <td>{{$item->id}}</td>
                     <td>{{$item->lead_no}}</td>
+                    <td>{{$item->lead_type}}</td>
                     <td>{{$item->customer_name}}</td>
                     <td>{{$item->email}}</td>
                     <td>{{$item->customer_number}}</td>

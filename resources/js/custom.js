@@ -501,3 +501,26 @@ $(function () {
         }
     });
 });
+$('#inlineRadio1').click(function () {
+    $("#fullemirateid").show();
+    $("#lastfive").hide();
+    $("#emirate_id_last_five").val('');
+});
+$('#inlineRadio2').click(function () {
+    $("#lastfive").show();
+    $("#fullemirateid").hide();
+    $("#emirate_id").val('');
+
+
+});
+
+$("#lead_type").change(function () {
+    // alert("s");
+    // $("#state__area").attr("disabled", this.value == "other1");
+    if(this.value == 'P2P'){
+        $("#InlineRadioCheck").show();
+    }else{
+        $("#InlineRadioCheck").hide();
+    }
+    // or $("#flap-drop").toggle(this.value!="23");
+});

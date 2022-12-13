@@ -58,6 +58,8 @@ class VerificationController extends Controller
         }
         //
         // return "Ok";
+
+
         // $data = Carbon::
         //
         // return $request->leadnumber;
@@ -165,7 +167,7 @@ class VerificationController extends Controller
             'emirate' => 'required',
             'remarks' => 'required',
             'plans' => 'required',
-            'refference_id' => 'required',
+            'refference_id' => 'required_if:sim_type,==,MNP',
             'audio' => 'required',
             'additional_documents' => 'required',
             'emirate_expiry' => 'required|date|after:tomorrow',
@@ -176,6 +178,19 @@ class VerificationController extends Controller
         }
         //
         // return "Ok";
+        $val = $request->lead_id;
+        $du_id =  str_pad($val, 4, "0", STR_PAD_LEFT); // 0001
+        //
+        $name = count(explode(' ',$request->cname));
+        if($name > 2){
+            $name = explode(' ',$request->cname);
+            $name_final = $name[0] . ' ' . $name[1];
+        }
+        else{
+            $name_final = $request->cname;
+        }
+        $du_final_code = 'VS-' . $du_id .'-'. $request->sim_type . '-' . $name_final;
+        //
         if ($file = $request->file('front_id')) {
             //convert image to base64
             $image = base64_encode(file_get_contents($request->file('front_id')));
@@ -255,7 +270,7 @@ class VerificationController extends Controller
             'plans' => $request->plans,
             'language' => $request->language,
             'emirate_expiry' => $request->emirate_expiry,
-            'dob' => $request->dob,
+            // 'dob' => $request->dob,
             'status' => '1.09',
             'saler_name' => auth()->user()->name,
             'saler_id' => auth()->user()->id,
@@ -282,13 +297,14 @@ class VerificationController extends Controller
         $data2->plans = $request->plans;
         $data2->language = $request->language;
         $data2->emirate_expiry = $request->emirate_expiry;
-        $data2->dob = $request->dob;
+        // $data2->dob = $request->dob;
         $data2->status = '1.08';
         $data2->remarks = $request->remarks;
         $data2->front_id = $front_id;
         $data2->back_id = $back_id;
         $data2->additional_docs_photo = $additional_docs_photo;
         $data2->additional_docs_name = $request->additional_documents;
+        $data2->du_lead_no = $du_id;
         // $data2->verify_agent = auth()->user()->id;
         $data2->save();
 
@@ -337,7 +353,7 @@ class VerificationController extends Controller
             'user_agent_id' => auth()->user()->id,
         ]);
         //
-        $lead = lead_sale::select('lead_sales.id', 'lead_sales.lead_no', 'lead_sales.customer_name', 'lead_sales.customer_number', 'plans.plan_name', 'lead_sales.saler_name', 'lead_sales.lead_type','lead_sales.front_id','lead_sales.back_id', 'lead_sales.additional_docs_photo','lead_sales.nationality','lead_sales.emirate_id','lead_sales.emirate_expiry','lead_sales.email','users.name as agent_name','lead_sales.reff_id','lead_sales.work_order_num')
+        $lead = lead_sale::select('lead_sales.id', 'lead_sales.lead_no', 'lead_sales.customer_name', 'lead_sales.customer_number', 'plans.plan_name', 'lead_sales.saler_name', 'lead_sales.lead_type','lead_sales.front_id','lead_sales.back_id', 'lead_sales.additional_docs_photo','lead_sales.nationality','lead_sales.emirate_id','lead_sales.emirate_expiry','lead_sales.email','users.name as agent_name','lead_sales.reff_id','lead_sales.work_order_num','lead_sales.address')
         ->Join(
             'plans',
             'plans.id',
@@ -367,13 +383,14 @@ class VerificationController extends Controller
         FunctionController::SendWhatsApp($details);
         //
         $data_for_pdf = [
-            'title' => 'Callmax',
+            'title' => $du_final_code,
             'front' => $lead->front_id,
             'back' => $lead->back_id,
             'lead_id' => $lead->lead_no,
             'reff_id' => $lead->reff_id,
             'work_order_num' => $lead->work_order_num,
             'customer_name' => $lead->customer_name,
+            'address' => $lead->address,
             // 'audio' => $app->audio,
             'additional_documents' => $lead->additional_docs_photo,
         ];
@@ -383,17 +400,17 @@ class VerificationController extends Controller
                 'email.p2p-table',
                 compact('data_for_pdf', 'lead'),
                 function ($message) use ($data_for_pdf, $lead) {
-                    $pdf = PDF::loadView('email.myPdf', compact('data_for_pdf'));
+                    $pdf = PDF::loadView('email.MyPdf', compact('data_for_pdf'));
                     // $pdf2 = PDF::loadView('pdf.AdditionalDocument', compact('additional_documents'));
                     // $message->to(['parhakooo@gmail.com', 'salmanahmed334@gmail.com'])
                     $message->to('parhakooo@gmail.com', 'Parhakooo')
                         ->cc(['salman@vocus.ae'])
-                        ->bcc(['iftekhar@vocus.ae'])
+                        // ->bcc(['iftekhar@vocus.ae'])
                         // ->cc(['sujatha.chakravarthy@du.ae','leads@callmax.ae', 'anwar@callmax.ae','arif@callmax.ae'])
                         // ->cc(['kashif@callmax.ae', 'isqintl@gmail.com', 'kkashifs@gmail.com', 'device@callmax.ae'])
                         // $message->to('isqintl@gmail.com','Iftekhar Saeed')
                         // ->cc(['sujatha.chakravarthy@du.ae','device@callmax.ae'])
-                        ->subject($data_for_pdf['lead_id'] . ' ' . $data_for_pdf['customer_name']);
+                        ->subject($data_for_pdf['title']);
                     $message->from('sales@vocus.ae', 'Vocus Sales');
                     $message->attachData($pdf->output(), 'leadsdocument.pdf');
             });
@@ -403,17 +420,17 @@ class VerificationController extends Controller
                 'email.du-table',
                 compact('data_for_pdf', 'lead'),
                 function ($message) use ($data_for_pdf, $lead) {
-                    $pdf = PDF::loadView('email.myPdf', compact('data_for_pdf'));
+                    $pdf = PDF::loadView('email.MyPdf', compact('data_for_pdf'));
                     // $pdf2 = PDF::loadView('pdf.AdditionalDocument', compact('additional_documents'));
                     // $message->to(['parhakooo@gmail.com', 'salmanahmed334@gmail.com'])
                     $message->to('parhakooo@gmail.com', 'Parhakooo')
                         ->cc(['salman@vocus.ae'])
-                        ->bcc(['iftekhar@vocus.ae'])
+                        // ->bcc(['iftekhar@vocus.ae'])
                         // ->cc(['sujatha.chakravarthy@du.ae','leads@callmax.ae', 'anwar@callmax.ae','arif@callmax.ae'])
                         // ->cc(['kashif@callmax.ae', 'isqintl@gmail.com', 'kkashifs@gmail.com', 'device@callmax.ae'])
                         // $message->to('isqintl@gmail.com','Iftekhar Saeed')
                         // ->cc(['sujatha.chakravarthy@du.ae','device@callmax.ae'])
-                        ->subject($data_for_pdf['lead_id'] . ' ' . $data_for_pdf['customer_name']);
+                    ->subject($data_for_pdf['title']);
                     $message->from('sales@vocus.ae', 'Vocus Sales');
                     $message->attachData($pdf->output(), 'leadsdocument.pdf');
                 }

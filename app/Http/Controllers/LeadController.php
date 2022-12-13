@@ -41,7 +41,7 @@ if (auth()->user()->role == 'Verification') {
             }
         })
     ->get();
-    $mnp = lead_sale::select('lead_sales.customer_name', 'lead_sales.id', 'lead_sales.email', 'lead_sales.customer_number', 'status_codes.status_name as status', 'plans.plan_name', 'lead_sales.lead_no')
+    $mnp = lead_sale::select('lead_sales.customer_name', 'lead_sales.id', 'lead_sales.email', 'lead_sales.customer_number', 'status_codes.status_name as status', 'plans.plan_name', 'lead_sales.lead_no','lead_sales.lead_type')
     ->whereIn('lead_type', ['MNP','P2P'])
     // ->where('lead_type','HomeWifi')
     ->Join(
@@ -271,12 +271,15 @@ if (auth()->user()->role == 'Verification') {
     }
     //
     public function LeadSubmitVerification(Request $request){
+        //
 
+        //
         $validatedData = Validator::make($request->all(), [
             'full_name' => 'required|string',
             'email' => 'required|string|email',
             'contact_number' => 'required',
-            'emirate_id' => 'required',
+            'emirate_id' => 'required_if:list_type,==,MNP',
+            // 'emirate_id' => 'required_if:list_type,==,MNP',
             'gender' => 'required',
             'nationality' => 'required',
             'address' => 'required',
@@ -284,8 +287,8 @@ if (auth()->user()->role == 'Verification') {
             'emirate' => 'required',
             'remarks' => 'required',
             'plans' => 'required',
-            'front_id' => 'required',
-            'back_id' => 'required',
+            'front_id' => 'required_if:list_type,==,MNP',
+            'back_id' => 'required_if:list_type,==,MNP',
             'additional_docs_name' => 'required',
             'additional_docs_photo' => 'required',
             'lead_type' => 'required',
@@ -315,8 +318,8 @@ if (auth()->user()->role == 'Verification') {
             $front_id = $originalFileName;
             $file->move('documents', $front_id);
         } else {
-            return response()->json(['error' => ['Documents' => ['there is an issue in Front ID, Contact Team Leader']]], 200);
-            // $cnic_front =  $request->cnic_front_old;
+            // return response()->json(['error' => ['Documents' => ['there is an issue in Front ID, Contact Team Leader']]], 200);
+            $front_id =  '';
         }
         if ($file = $request->file('additional_docs_photo')) {
             //convert image to base64
@@ -333,7 +336,8 @@ if (auth()->user()->role == 'Verification') {
             // $name = $ext . '-' . $file->getClientOriginalName();
             $additional_docs_photo = $originalFileName;
             $file->move('documents', $additional_docs_photo);
-        } else {
+        }
+        else {
             return response()->json(['error' => ['Documents' => ['there is an issue in Additional Docs, Contact Team Leader']]], 200);
             // $additional_docs_photo =  $request->additional_docs_photo;
         }
@@ -353,17 +357,35 @@ if (auth()->user()->role == 'Verification') {
             $back_id = $originalFileName;
             $file->move('documents', $back_id);
         } else {
-            return response()->json(['error' => ['Documents' => ['there is an issue in Back ID, Contact Team Leader']]], 200);
+
+            $back_id =  '';
+            // return response()->json(['error' => ['Documents' => ['there is an issue in Back ID, Contact Team Leader']]], 200);
             // $back_id = $request->cnic_back_old;
         }
         //
+        if ($request->inlineRadioOptions == 'option1' && $request->lead_type == 'P2P') {
+            $emirate_id = $request->emirate_id;
+            $emirate_id_count = 1;
+        }
+        elseif ($request->inlineRadioOptions == 'option2' && $request->lead_type == 'P2P') {
+            $emirate_id = $request->emirate_id_last_five;
+            $emirate_id_count = 0;
+        }
+        else{
+            $emirate_id = $request->emirate_id;
+            $emirate_id_count = 1;
+        }
+        // return $emirat
+            // return response()->json(['error' => ['Documents' => [$emirate_id_count]]], 200);
+
+
         // return $request->leadnumber;
         $data = lead_sale::create([
             'lead_no' => $request->leadnumber,
             'customer_name' => $request->full_name,
             'email' => $request->email,
             'customer_number' => $request->contact_number,
-            'emirate_id' => $request->emirate_id,
+            'emirate_id' => $emirate_id,
             'gender' => $request->gender,
             'nationality' => $request->nationality,
             'address' => $request->address,
@@ -382,6 +404,7 @@ if (auth()->user()->role == 'Verification') {
             'back_id' => $back_id,
             'additional_docs_photo' => $additional_docs_photo,
             'additional_docs_name' => $request->additional_docs_name,
+            'emirate_id_count' => trim($emirate_id_count),
         ]);
         remark::create([
             'remarks' => $request->remarks,
@@ -392,9 +415,10 @@ if (auth()->user()->role == 'Verification') {
             'user_agent_id' => auth()->user()->id,
         ]);
         //
-        $lead = lead_sale::select('lead_sales.id','lead_sales.lead_no','lead_sales.customer_name','lead_sales.customer_number','home_wifi_plans.name as plan_name','lead_sales.saler_name','lead_sales.lead_type')
+        $lead = lead_sale::select('lead_sales.id','lead_sales.lead_no','lead_sales.customer_name','lead_sales.customer_number','plans.plan_name','lead_sales.saler_name','lead_sales.lead_type')
         ->Join(
-            'home_wifi_plans','home_wifi_plans.id','lead_sales.plans'
+            'plans',
+            'plans.id','lead_sales.plans'
         )
         ->where('lead_sales.id',$data->id)->first();
         //
@@ -431,7 +455,8 @@ if (auth()->user()->role == 'Verification') {
             'full_name' => 'required|string',
             'email' => 'required|string|email',
             'contact_number' => 'required',
-            'emirate_id' => 'required',
+            'emirate_id' => 'required_if:list_type,==,MNP',
+            // 'emirate_id' => 'required_if:list_type,==,MNP',
             'gender' => 'required',
             'nationality' => 'required',
             'address' => 'required',
@@ -439,10 +464,10 @@ if (auth()->user()->role == 'Verification') {
             'emirate' => 'required',
             'remarks' => 'required',
             'plans' => 'required',
-            // 'front_id' => 'required',
-            // 'back_id' => 'required',
+            'front_id' => 'required_if:list_type,==,MNP',
+            'back_id' => 'required_if:list_type,==,MNP',
             'additional_docs_name' => 'required',
-            // 'additional_docs_photo' => 'required',
+            'additional_docs_photo' => 'required_if:old_additional_docs_name,==,""',
             'lead_type' => 'required',
             'emirate_expiry' => 'required|date|after:tomorrow',
             'dob' => ['before:20 years ago']
@@ -518,12 +543,25 @@ if (auth()->user()->role == 'Verification') {
             // $back_id = $request->cnic_back_old;
         }
         //
+        if ($request->inlineRadioOptions == 'option1' && $request->lead_type == 'P2P') {
+            $emirate_id = $request->emirate_id;
+            $emirate_id_count = 1;
+        } elseif ($request->inlineRadioOptions == 'option2' && $request->lead_type == 'P2P') {
+            $emirate_id = $request->emirate_id_last_five;
+            $emirate_id_count = 0;
+        } else {
+            $emirate_id = $request->emirate_id;
+            $emirate_id_count = 1;
+        }
+        //
+        //
         // return $request->leadnumber;
         $data2 = lead_sale::findorfail($request->lead_id);
         $data2->customer_name = $request->full_name;
         $data2->email = $request->email;
         $data2->customer_number = $request->contact_number;
-        $data2->emirate_id = $request->emirate_id;
+        $data2->emirate_id = $emirate_id;
+        $data2->emirate_id_count = trim($emirate_id_count);
         $data2->gender = $request->gender;
         $data2->nationality = $request->nationality;
         $data2->address = $request->address;
@@ -537,7 +575,7 @@ if (auth()->user()->role == 'Verification') {
         $data2->front_id = $front_id;
         $data2->back_id = $back_id;
         $data2->additional_docs_photo = $additional_docs_photo;
-        $data2->additional_docs_name = $request->additional_documents;
+        $data2->additional_docs_name = $request->additional_docs_name;
         // $data2->verify_agent = auth()->user()->id;
         $data2->save();
         remark::create([

@@ -441,8 +441,19 @@
                       </select>
                     </div>
                     <div class="divTableCell">
+                      @if($operation->lead_type == 'P2P')
+                        @if($operation->emirate_id_count  == 0)
+                        <input class="form-control " id="province_original_id1" data-inputmask="'mask': '9999-9'"
+                        data-validate-length-range="6" data-validate-words="2" name="emirate_number" placeholder="Emirate ID" type="num" value="{{ $operation->emirate_id }}">
+                        @else
                         <input class="form-control " id="province_original_id1" data-inputmask="'mask': '999-999-9999999-9'"
                         data-validate-length-range="6" data-validate-words="2" name="emirate_number" placeholder="Emirate ID" type="num" value="{{ $operation->emirate_id }}">
+                        @endif
+                      @else
+                      <input class="form-control " id="province_original_id1" data-inputmask="'mask': '999-999-9999999-9'"
+                        data-validate-length-range="6" data-validate-words="2" name="emirate_number" placeholder="Emirate ID" type="num" value="{{ $operation->emirate_id }}">
+                      @endif
+
                       <input class="form-control " id="province_original_id11" name="emirate_id" type="hidden" value="{{ $operation->emirate_id }}">
                       <script>
                         var myInput = document.getElementById('province_original_id1');
@@ -648,17 +659,17 @@
 
 
                   </div>
-                   <div class="col-8">
-                                <div class="mb-1">
-                                    <label class="form-label" for="first-name-icon">Refference ID By DU</label>
-                                    <div class="input-group input-group-merge">
-                                        <span class="input-group-text"><i data-feather="user"></i></span>
+                  @if($operation->lead_type == 'MNP')
+                  <div class="col-8">
+                               <div class="mb-1">
+                                   <label class="form-label" for="first-name-icon">Refference ID By DU</label>
+                                   <div class="input-group input-group-merge">
+                                       <span class="input-group-text"><i data-feather="user"></i></span>
 
-                                        <input type="text" name="refference_id" id="refference_id" class="form-control">
-                                    </div>
-                                </div>
-                            </div>
-               @if($operation->lead_type == 'MNP' || $operation->lead_type == 'P2P')
+                                       <input type="text" name="refference_id" id="refference_id" class="form-control">
+                                   </div>
+                               </div>
+                           </div>
                <div class="col-8">
                                 <div class="mb-1">
                                     <label class="form-label" for="first-name-icon">Work Order By DU</label>
@@ -694,7 +705,7 @@
                                 </div>
                             </div>
                             <h3 class="text-center" id="loading_num3" style="display:none">
-                            {{-- Please wait while system loading leads... --}}
+                            Please wait while system loading leads...
                             <img src="{{asset('images/loader/loader.gif')}}" alt="Loading"
                                 class="img-fluid text-center offset-md-6" style="width:35px;">
                         </h3>

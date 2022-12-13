@@ -262,6 +262,10 @@ Route::group(['prefix' => 'admin','middleware'=>'auth'], function () {
     Route::post('product-add', [AdminController::class, 'productadd'])->name('product.add');
     Route::post('product-edit-update', [AdminController::class, 'productedit'])->name('product.edit.update');
     //    Product
+    Route::get('plans', [AdminController::class, 'plans'])->name('plan');
+    Route::get('plan-edit/{id}', [AdminController::class, 'plan_edit'])->name('plan.edit');
+    Route::post('plan-add', [AdminController::class, 'planadd'])->name('plan.add');
+    Route::post('plan-edit-update', [AdminController::class, 'planedit'])->name('plan.edit.update');
     //    Users
     Route::get('users', [AdminController::class, 'users'])->name('users');
     Route::get('users-edit/{id}', [AdminController::class, 'users_edit'])->name('user.edit');

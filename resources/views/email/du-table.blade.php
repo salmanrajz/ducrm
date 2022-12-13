@@ -97,15 +97,15 @@
             </tr>
             <tr style="padding-left:20px;border:2px solid black">
                 <td style="padding-left:20px;border:2px solid black">Order ID</td>
-                <td style="padding-left:20px;border:2px solid black">{{$lead->work_order_num}}</td>
+                <td style="padding-left:20px;border:2px solid black"></td>
             </tr>
             <tr style="padding-left:20px;border:2px solid black">
                 <td style="padding-left:20px;border:2px solid black">Dealer ID</td>
                 <td style="padding-left:20px;border:2px solid black">TE 151</td>
             </tr>
             <tr style="padding-left:20px;border:2px solid black">
-                <td style="padding-left:20px;border:2px solid black"></td>
-                <td style="padding-left:20px;border:2px solid black"></td>
+                <td style="padding-left:20px;border:2px solid black">Address</td>
+                <td style="padding-left:20px;border:2px solid black">{{$lead->address}}</td>
             </tr>
             @if ($lead['sim_type'] == 'exist')
             @else

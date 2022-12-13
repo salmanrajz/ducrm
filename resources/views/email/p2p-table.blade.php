@@ -77,6 +77,10 @@
                 <td style="padding-left:20px;border:2px solid black">Sale Agent Name</td>
                 <td style="padding-left:20px;border:2px solid black">{{$lead->agent_name}}</td>
             </tr>
+            <tr style="padding-left:20px;border:2px solid black">
+                <td style="padding-left:20px;border:2px solid black">Emirate ID</td>
+                <td style="padding-left:20px;border:2px solid black">{{$lead->emirate_id}}</td>
+            </tr>
 
             {{-- <tr style="padding-left:20px;border:2px solid black">
                 <td style="padding-left:20px;border:2px solid black">Attachments - EID and supporting doc in PDF format</td>
