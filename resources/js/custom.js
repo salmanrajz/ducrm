@@ -67,6 +67,55 @@ window.SavingActivationLead = function(url,form,redirect){
 //     var rizwan = document.getElementById(form);
 //     tinymce.triggerSave();
 //
+window.CallLogForm = function (id, form, url) {
+// function CallLogForm(id, form, url) {
+    var rizwan = document.getElementById(form);
+    // alert(id)
+    // $("#btn_"+id).removeClass('btn-danger'); //versions newer than 1.6
+    // $("#btn_"+id).AddClass('btn-danger'); //versions newer than 1.6
+    // alert(id);
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: new FormData(rizwan), // Data sent to server, a set of key/value pairs (i.e. form fields and values)
+        contentType: false, // The content type used when sending data to the server.
+        cache: false, // To unable request pages to be cached
+        processData: false,
+        beforeSend: function () {
+            // $("#request_login" + id).show();
+            // // $(".request_call").hide();
+            // $('#' + btn).prop('disabled', true);
+        },
+        success: function (msg) {
+            //    alert(msg);
+            if (msg == 1) {
+                $("#btn_" + id).prop('value', 'Submitted'); //versions newer than 1.6
+                $("#btn_" + id).prop('disabled', true); //versions newer than 1.6
+            } else {
+                alert("Something Wrong");
+            }
+            // var k = msg.split('###');
+            // $("#dob").val(k[1]);
+            // $("#expiry").val(k[2]);
+            // $("#activation_emirate_expiry").val(k[2]);
+            // var age = getAge(k[1]);
+            // $("#age").val(age);
+            // //  alert(age);
+
+            // if (age < 21) {
+            //     Swal.fire({
+            //         icon: 'error',
+            //         title: 'Age less than 21',
+            //         text: 'User is not eligible for this package!',
+            //         //  footer: '<a href>Why do I have this issue?</a>'
+            //     })
+            // }
+        }
+        // }
+    });
+
+}
+//
 window.VerifyLeadBlog = function (url, form, redirect) {
 // function SavingActivationLead(url, form, redirect) {
     if (confirm("are you sure all information accurate, Kindly make sure before proceed?")) {
@@ -175,6 +224,73 @@ window.NameApi = function (url, form) {
     // }));
 }
 
+window.myconversation = function () {
+    // alert($(".chat_input").val());
+    var remarks = $(".chat_input").val();
+    var id = $("#leadid").val();
+    var url = $("#ChatAjaxUrl").val();
+    var saler_id = $("#saler_id").val();
+    $.ajax({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        type: 'POST',
+        data: {
+            id: id,
+            remarks: remarks,
+            saler_id: saler_id,
+        },
+        url: url,
+        cache: false,
+        beforeSend: function () {
+            $(".chat_input").val('');
+            // $(".chat_input").empty();
+        },
+        success: function (res) {
+            // alert(res);
+            // console.log(res);
+            var data = $.trim(res);
+            // alert(data);
+            // $("#leadno").text(data);
+            $(".msg_container_base").html(data);
+            // $(".msg_sent").text('<p>Lorem ipsum</p>');
+            // location.reload();
+            // if (res) {
+            //     $('#package_id').append($("<option/>", {
+            //         value: '',
+            //         text: 'Select'
+            //     }));
+            //     $.each(res, function (key, value) {
+
+            //         $('#package_id').append($("<option/>", {
+            //             value: key,
+            //             text: value
+            //         }));
+            //     });
+            // }
+            // var value = $.trim(value);
+            // $("#fetch_teacher").html(value);
+        }
+    });
+}
+//
+// function change_feedback(id)
+window.change_feedback = function (id) {
+    // console.log(id)
+    // var a =id;
+    var a = $("#remarks_call_log_" + id).val();
+    console.log("HHO" + a);
+    if (a == 'Follow up') {
+        $("#RemarksLabel").show();
+        $("#other_" + id).show();
+    } else {
+        $("#RemarksLabel").hide();
+        $("#other_" + id).hide();
+    }
+}
+//
+
+
 // function VerifyLead(url, form, redirect) {
 window.VerifyLead = function (url, form,redirect) {
 if (confirm("are you sure all information accurate, Kindly make sure before proceed?")) {
@@ -223,10 +339,16 @@ if (confirm("are you sure all information accurate, Kindly make sure before proc
 
 
 
+
 // pre_verification_js
 $(".box:checked").next().addClass("blue");
 
 
+//
+// $('#remarks_').change(function () {
+//     // alert("eooo");
+//     $('#province').attr('disabled', this.value == "other1");
+// });
 //
 $('#state').change(function () {
     // alert("eooo");
@@ -469,6 +591,52 @@ $(function () {
     });
 });
 
+// function imageIsLoaded1(e) {
+window.imageIsLoadedProfile = function (e) {
+    $("#myImg").show();
+    $('#myImg').attr('src', e.target.result);
+};
+$(function () {
+    $("#profile_pic").change(function () {
+        // console.log('ok');
+        if (this.files && this.files[0]) {
+            var reader = new FileReader();
+            reader.onload = imageIsLoadedProfile;
+            reader.readAsDataURL(this.files[0]);
+        }
+    });
+});
+// function imageIsLoaded1(e) {
+window.imageIsLoadedCnicFront = function (e) {
+    $("#CnicFrontImg").show();
+    $('#CnicFrontImg').attr('src', e.target.result);
+};
+$(function () {
+    $("#CnicFront").change(function () {
+        // console.log('ok');
+        if (this.files && this.files[0]) {
+            var reader = new FileReader();
+            reader.onload = imageIsLoadedCnicFront;
+            reader.readAsDataURL(this.files[0]);
+        }
+    });
+});
+// function imageIsLoaded1(e) {
+window.imageIsLoadedCnicBack = function (e) {
+    $("#CnicBackImg").show();
+    $('#CnicBackImg').attr('src', e.target.result);
+};
+$(function () {
+    $("#CnicBack").change(function () {
+        // console.log('ok');
+        if (this.files && this.files[0]) {
+            var reader = new FileReader();
+            reader.onload = imageIsLoadedCnicBack;
+            reader.readAsDataURL(this.files[0]);
+        }
+    });
+});
+
 
 // window.VerifyLead = function (url, form, redirect)
 window.imageIsLoaded2 = function(e) {
@@ -524,3 +692,96 @@ $("#lead_type").change(function () {
     }
     // or $("#flap-drop").toggle(this.value!="23");
 });
+
+//
+window.LoadMNPReport = function (url, status, loadingUrl){
+    var cc = $("#cc").val();
+    $.ajax({
+        type: 'POST',
+        url: url,
+        data: {
+            status: status,
+            cc: cc,
+        },
+        beforeSend: function () {
+            $("#AdminDashboard").html('<img src="' + loadingUrl + '" class="img-fluid text-center offset-md-6" style="width:35px;"></img>');
+            // $("#loading_num3").html('<p> Loading </p>');
+        },
+        success: function (data) {
+            // alert(data);
+            // $("#loading_num3").hide();
+            $("#AdminDashboard").html(data);
+        }
+    });
+}
+
+// WhatsApp MEssage to Client
+
+window.BulkAssigner = function(url,form){
+// function BulkAssigner(url, form) {
+    // alert(form);
+    var rizwan = document.getElementById(form);
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: new FormData(rizwan), // Data sent to server, a set of key/value pairs (i.e. form fields and values)
+        contentType: false, // The content type used when sending data to the server.
+        cache: false, // To unable request pages to be cached
+        processData: false,
+        beforeSend: function () {
+            // $("#request_login" + id).show();
+            // // $(".request_call").hide();
+            // $('#' + btn).prop('disabled', true);
+            $("#loading_num").show();
+        },
+        success: function (msg) {
+            //    alert(msg);
+            if (msg == 1) {
+                $("#loading_num").hide();
+                location.reload();
+            } else {
+                alert("Something wrong");
+            }
+            //  var k = msg.split('###');
+            // // console.log(k[3] + ' ' + $k[4]);
+            //  $("#name").val(k[1]);
+            //  $("#CustomerNameAct").val(k[1]);
+            //  $("#emirate_id").val(k[2]);
+            //  $("#activation_emirate_expiry").val(k[2]);
+            //  $("#application_date").val(k[3] + ' ' + k[4]);
+        }
+        // }
+    });
+    // }
+    // }));
+}
+window.MyWhatsApp = function (id, data, url) {
+       // console.log(number);
+       // $("#dpExist").show();
+       $.ajax({
+           type: "POST",
+           url: url,
+           data: {
+               id: id,
+               data:data,
+           }, // Data sent to server, a set of key/value pairs (i.e. form fields and values)
+           // contentType: false, // The content type used when sending data to the server.
+           // cache: false, // To unable request pages to be cached
+           // processData: false,
+           headers: {
+               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+           },
+           beforeSend: function () {
+               // $("#loading_num2").show();
+           },
+           success: function (msg) {
+               // alert(msg);
+            //    alert(msg);
+            window.open(msg.success, '_blank');
+            // window.location.href = msg.success;
+
+           }
+           // }
+       });
+
+}

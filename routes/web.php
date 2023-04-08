@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ActivationController;
 use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LanguageController;
@@ -18,8 +19,13 @@ use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\LeadController;
 use App\Http\Controllers\ChartsController;
 use App\Http\Controllers\DesignerController;
+use App\Http\Controllers\ExamController;
 use App\Http\Controllers\FunctionController;
+use App\Http\Controllers\ImportExcelController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\TrainingController;
+use App\Http\Controllers\NumberAssigner;
+use App\Http\Controllers\WhatsAppController;
 use App\Http\Controllers\VerificationController;
 
 /*
@@ -258,8 +264,8 @@ Route::group(['prefix' => 'admin','middleware'=>'auth'], function () {
     //    ROLE
     //    Product
     Route::get('product', [AdminController::class, 'product'])->name('product');
-    Route::get('product-edit/{id}', [AdminController::class, 'product_edit'])->name('product.edit');
     Route::post('product-add', [AdminController::class, 'productadd'])->name('product.add');
+    Route::get('product-edit/{id}', [AdminController::class, 'product_edit'])->name('product.edit');
     Route::post('product-edit-update', [AdminController::class, 'productedit'])->name('product.edit.update');
     //    Product
     Route::get('plans', [AdminController::class, 'plans'])->name('plan');
@@ -271,6 +277,8 @@ Route::group(['prefix' => 'admin','middleware'=>'auth'], function () {
     Route::get('users-edit/{id}', [AdminController::class, 'users_edit'])->name('user.edit');
     Route::post('users-add', [AdminController::class, 'usersadd'])->name('user.add');
     Route::post('users-edit-update', [AdminController::class, 'usersedit'])->name('user.edit.update');
+    Route::get('DeleteUser/{id}', [AdminController::class, 'DeleteUser'])->name('user.destroy');
+
     //    Users
     Route::get('call-center', [AdminController::class, 'call_center'])->name('call.center');
     Route::get('call-center-edit/{id}', [AdminController::class, 'call_center_edit'])->name('call.center.edit');
@@ -279,8 +287,11 @@ Route::group(['prefix' => 'admin','middleware'=>'auth'], function () {
     //    Users
     Route::get('view-all-leads', [LeadController::class, 'AllLeads'])->name('all.leads');
     Route::get('view-wifi-leads', [LeadController::class, 'ViewWifiLead'])->name('wifi.leads');
+    Route::get('view-inprocess-leads', [LeadController::class, 'ViewInProcessLead'])->name('ViewInProcessLead');
     Route::get('add-home-wifi', [LeadController::class, 'HomeWifiForm'])->name('HomeWifiForm');
+    Route::get('add-new', [LeadController::class, 'AddNewForm'])->name('AddNewForm');
     Route::post('home-wifi-submit', [LeadController::class, 'HomeWifiSubmit'])->name('HomeWifiSubmit');
+    Route::post('new-lead-submit', [LeadController::class, 'NewLeadSubmit'])->name('NewLeadSubmit');
     //
     Route::post('ocr_name_new', [FunctionController::class, 'ocr_name_new'])->name('ocr-name.submit');
     //
@@ -302,25 +313,147 @@ Route::group(['prefix' => 'admin','middleware'=>'auth'], function () {
     //
     Route::get('view-lead/{id}', [LeadController::class, 'ViewLead'])->name('view.lead');
     Route::get('edit-lead/{id}', [LeadController::class, 'EditLead'])->name('edit.lead');
+    //
+    Route::post('ChatRequest', [LeadController::class, 'ChatRequest'])->name('chat.post');
+    // Route::post('ChatRequest', 'ChatController@ChatPost')->name('chat.post');
+    //
 });
 Route::group(['prefix' => 'trainer'], function () {
     //    ROLE
     Route::get('page/{id}', [TrainingController::class, 'page'])->name('training.page');
+    //
+    Route::get('AddQuestionBank', [ExamController::class, 'AddQuestionBank'])->name('AddQuestionBank')->middleware('auth');
+    Route::get('quiz-edit/{slug}', [ExamController::class, 'EditQuiz'])->name('edit.quiz')->middleware('auth');
+    Route::get('AllQuestionBank', [ExamController::class, 'AllQuestionBank'])->name('AllQuestionBank')->middleware('auth');
+    Route::post('QuizDelete', [ExamController::class, 'QuizDelete'])->name('quiz.delete');
+    Route::post('upload_image', [ExamController::class, 'upload_image'])->name('upload.image')->middleware('auth');
+    Route::post('QuizAdd', [ExamController::class, 'QuizAdd'])->name('QuizAdd')->middleware('auth');
+    Route::post('QuizUpdate', [ExamController::class, 'QuizUpdate'])->name('QuizUpdate')->middleware('auth');
+    // Blog Categories
+    Route::get('quiz-category', [ExamController::class, 'category'])->name('exam.category.index')->middleware('auth');
+    Route::get('edit-category/{id}', [ExamController::class, 'editcategory'])->name('edit.category.index')->middleware('auth');
+    Route::get('add-category', [ExamController::class, 'addcategory'])->name('addcategory')->middleware('auth');
+    Route::post('quiz-category-create', [ExamController::class, 'CategoryCreate'])->name('exam.category.create')->middleware('auth');
+    Route::post('QuizEditCategoryData', [ExamController::class, 'EditCategoryData'])->name('exam.edit.category.data');
+    Route::post('QuizEditBlogCategory', [ExamController::class, 'EditBlogCategory'])->name('exam.EditBlogCategory');
+    Route::post('QuizCategoryDelete', [ExamController::class, 'CategoryDelete'])->name('exam.category.delete');
+    //
+    Route::get('QuestionStart', [ExamController::class, 'QuestionStart'])->name('QuestionStart')->middleware('auth');
+
+    //
 });
-Route::group(['prefix' => 'verification'], function () {
+Route::group(['prefix' => 'verification','middleware' => 'auth'], function () {
     //    ROLE
     Route::get('verification-lead/{id}', [VerificationController::class, 'VerificationLead'])->name('verification.lead');
+    Route::get('processing-lead/{id}', [VerificationController::class, 'ProcessingLead'])->name('processing.lead');
     Route::post('verifyLead', [VerificationController::class, 'verifyLead'])->name('verifyLead');
+    Route::post('proceedlead', [VerificationController::class, 'proceedlead'])->name('proceedlead');
     Route::post('RejectLeads', [VerificationController::class, 'RejectLeads'])->name('RejectLeads');
+    Route::post('RejectLeadsPre', [VerificationController::class, 'RejectLeadsPre'])->name('RejectLeadsPre');
     Route::post('followupleads', [VerificationController::class, 'followupleads'])->name('followupleads');
     Route::post('VerifyPostPaidLeads', [VerificationController::class, 'VerifyPostPaidLeads'])->name('VerifyPostPaidLeads');
+    Route::post('VerifyPostPaidLeadsNew', [VerificationController::class, 'VerifyPostPaidLeadsNew'])->name('VerifyPostPaidLeadsNew');
+    Route::post('VerifyPostPaidLeadsProcess', [VerificationController::class, 'VerifyPostPaidLeadsProcess'])->name('VerifyPostPaidLeadsProcess');
 });
 Route::group(['prefix' => 'designer'], function () {
     //    ROLE
     Route::get('all-design-lead', [DesignerController::class, 'all_lead_designer'])->name('all_lead_designer');
     Route::get('design-lead/{id}', [DesignerController::class, 'DesignerLead'])->name('DesignerLead');
-    // Route::post('verifyLead', [VerificationController::class, 'verifyLead'])->name('verifyLead');
-    // Route::post('RejectLeads', [VerificationController::class, 'RejectLeads'])->name('RejectLeads');
-    // Route::post('followupleads', [VerificationController::class, 'followupleads'])->name('followupleads');
-    // Route::post('VerifyPostPaidLeads', [VerificationController::class, 'VerifyPostPaidLeads'])->name('VerifyPostPaidLeads');
 });
+Route::group(['prefix' => 'activator','middleware'=>'auth'], function () {
+    //    ROLE
+    Route::get('in-process-lead', [ActivationController::class, 'inprocesslead'])->name('inprocesslead');
+    Route::get('in-process-lead-hw', [ActivationController::class, 'inprocessleadhomewifi'])->name('inprocessleadhomewifi');
+    Route::get('mnp-process-lead', [ActivationController::class, 'mnpprocesslead'])->name('mnpprocesslead');
+    Route::get('inprocess-lead/{id}', [ActivationController::class, 'inprocessleadview'])->name('inprocessleadview');
+    Route::get('inprocess-lead-hw/{id}', [ActivationController::class, 'inprocessleadviewhw'])->name('inprocessleadviewhw');
+    Route::get('pre-process-lead/{id}', [ActivationController::class, 'preprocessleadview'])->name('preprocessleadview');
+    Route::post('ProceedMNP', [ActivationController::class, 'ProceedMNP'])->name('proceed.mnp');
+    Route::post('ProceedP2P', [ActivationController::class, 'ProceedP2P'])->name('proceed.p2p');
+    Route::post('ProceedHW', [ActivationController::class, 'ProceedHW'])->name('proceed.hw');
+    Route::post('ActiveMNP', [ActivationController::class, 'ActiveMNP'])->name('active.mnp');
+});
+Route::group(['prefix' => 'report','middleware'=>'auth'], function () {
+    //    ROLE
+    Route::get('tl-card', [ReportController::class, 'tlcard'])->name('tl.scorecard');
+    Route::get('main-report', [ReportController::class, 'mainreport'])->name('main.report');
+    //    ROLE
+});
+Route::group(['prefix' => 'call','middleware'=>'auth'], function () {
+    //    ROLE
+    // Route::get('my-call-log', 'NumberController@my_call_log')->name('my_call_log')->middleware('auth');
+
+    Route::get('my-call-log', [NumberAssigner::class, 'my_call_log'])->name('my_call_log');
+    Route::get('tl-call-log', [NumberAssigner::class, 'tl_call_log'])->name('tl_call_log');
+    Route::get('MyLogDashboard', [NumberAssigner::class, 'MyLogDashboard'])->name('MyCallLogDashboard');
+    Route::post('submit_feedback_number', [NumberAssigner::class, 'submit_feedback_number'])->name('number.feedback.submit');
+    Route::post('submit_feedback_number_tl', [NumberAssigner::class, 'submit_feedback_number_tl'])->name('number.feedback.submit.tl');
+    Route::post('loadmnpdatacc', [NumberAssigner::class, 'loadmnpdatacc'])->name('loadmnpdatacc');
+    Route::get('call-table-data/{status}', [NumberAssigner::class, 'dashboard_status'])->name('mnp.status');
+    Route::get('agent-log', [NumberAssigner::class, 'agent_mnp_log'])->name('agent_mnp_log');
+    // Route::get('agent-log', [NumberAssigner::class, 'agent_mnp_log'])->name('agent_mnp_log');
+    Route::get('FollowUpDashboard', [NumberAssigner::class, 'FollowUpDashboard'])->name('FollowUpDashboard');
+    // Route::get('/FollowUpDashboard', 'MNPDashboardController@admin_dashboard')->name('MNPDashboard')->middleware('auth');;
+
+    // Route::get('/MNP-table-data/{status}', 'MNPDashboardController@dashboard_status')->name('mnp.status')->middleware('auth');;
+    // Route::get('/agent-mnp-log', 'MNPDashboardController@agent_mnp_log')->name('agent_mnp_log')->middleware('auth');;
+
+
+    //
+    // Route::get('/MNP-Dashboard', 'MNPDashboardController@admin_dashboard')->name('MNPDashboard')->middleware('auth');;
+    // Route::get('/MNP-user-Dashboard', 'MNPDashboardController@user_dashboard')->name('UserDashboard')->middleware('auth');;
+    // Route::get('/MNP-table-data/{status}', 'MNPDashboardController@dashboard_status')->name('mnp.status')->middleware('auth');;
+
+    // Route::get('/MasterMNPDashboard', 'MNPDashboardController@MasterMNPDashboard')->name('MasterMNPDashboard')->middleware('auth');;
+    // Route::post('/mnp-admin-load', 'MNPDashboardController@mnploadajax')->name('mnpload.ajax')->middleware('auth');;
+    // Route::get('/agent-mnp-log', 'MNPDashboardController@agent_mnp_log')->name('agent_mnp_log')->middleware('auth');;
+
+    // Route::get('/MNPCallCenterData/{cc}', 'MNPDashboardController@mnpcallcenterdata')->name('mnpcallcenterdata')->middleware('auth');;
+    // Route::post('/loadmnpdatacc', 'MNPDashboardController@loadmnpdatacc')->name('loadmnpdatacc')->middleware('auth');;
+    //
+});
+//
+Route::group(['prefix' => 'WhatsApp','middleware'=>'auth'], function () {
+    //    ROLE
+    // Route::post('MyWhatsApp', 'Wha@MyWhatsApp')->name('my_call_log')->middleware('auth');
+
+    Route::post('MyWhatsApp', [WhatsAppController::class, 'MyWhatsApp'])->name('my.whatsapp.message');
+    // Route::get('MyLogDashboard', [NumberAssigner::class, 'my_call_log'])->name('my_call_log');
+    // Route::post('submit_feedback_number', [NumberAssigner::class, 'submit_feedback_number'])->name('number.feedback.submit');
+});
+
+Route::group(['prefix' => 'Uploader','middleware'=>'auth'], function () {
+    //    ROLE
+    // Route::post('MyWhatsApp', 'Wha@MyWhatsApp')->name('my_call_log')->middleware('auth');
+    // Route::get('/NumberAssignerManager', 'NumberAssigner@NumberAssignerManager')->name('NumberAssignerManager')->middleware('auth');
+
+    Route::get('NumberAssignerManager', [NumberAssigner::class, 'NumberAssignerManager'])->name('NumberAssignerManager');
+    Route::get('NumberAssignerUser', [NumberAssigner::class, 'NumberAssignerUser'])->name('NumberAssignerUser');
+    Route::post('bulk_importer/assigner', [NumberAssigner::class, 'assigner'])->name('bulk.assigner');
+    Route::post('bulk_importer/assigner-user', [NumberAssigner::class, 'assigner_user'])->name('bulk.assigner.user');
+    // Route::post('/bulk_importer/assigner', 'NumberAssigner@assigner')->name('bulk.assigner')->middleware('auth');
+    // Route::post('/bulk_importer/assigner-user', 'NumberAssigner@assigner_user')->name('bulk.assigner.user')->middleware('auth');
+    // Route::get('MyLogDashboard', [NumberAssigner::class, 'my_call_log'])->name('my_call_log');
+    // Route::post('submit_feedback_number', [NumberAssigner::class, 'submit_feedback_number'])->name('number.feedback.submit');
+});
+
+Route::get('ScanWhatsApp', [FunctionController::class, 'ScanWhatsApp'])->name('ScanWhatsApp');
+Route::get('ImportExcel', [ImportExcelController::class, 'ImportExcel'])->name('ImportExcel');
+Route::get('TransferNumber', [NumberAssigner::class, 'TransferNumber'])->name('TransferNumber');
+Route::post('import', [ImportExcelController::class, 'import'])->name('import.excel');
+Route::get('ActivationSheet', [ReportController::class, 'ActivationSheet'])->name('ActivationSheet');
+Route::get('AllActivationSheet', [ReportController::class, 'AllActivationSheet'])->name('AllActivationSheet');
+Route::get('TestNumber', [ReportController::class, 'TestNumber'])->name('TestNumber');
+Route::get('TestWhatsApp', [ReportController::class, 'TestWhatsApp'])->name('TestWhatsApp');
+// Route::get('/ScanWhatsApp', 'WhatsAppController@ScanWhatsApp')->name('ScanWhatsApp');
+Route::get('MostImport', [ImportExcelController::class, 'MostImport'])->name('MostImport');
+Route::post('MostImportImport', [ImportExcelController::class, 'MostImportImport'])->name('MostImportImport');
+Route::get('MyGame', [ImportExcelController::class, 'MyGame'])->name('MyGame');
+// Route::post('customer-feedbac-submit', 'NumberController@submit_feedback_number')->name('number.feedback.submit')->middleware('auth');
+
+
+// Route::group(['prefix' => 'uploader'], function () {
+//     Route::post('/import-upload-bank', 'UploadController@import_data_excel')->name('import.uploader.excel')->middleware('auth');
+//     Route::get('/NumberAssignerManager', 'NumberAssigner@NumberAssignerManager')->name('NumberAssignerManager')->middleware('auth');
+//     Route::get('/NumberAssignerUser', 'NumberAssigner@NumberAssignerUser')->name('NumberAssignerUser')->middleware('auth');
+// });

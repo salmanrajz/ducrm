@@ -1,7 +1,7 @@
 
 @extends('layouts/contentLayoutMaster')
 
-@section('title', 'DataTables')
+@section('title', 'VOCUS LEADS')
 
 @section('vendor-style')
   {{-- vendor css files --}}

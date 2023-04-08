@@ -13,46 +13,12 @@
 
         <div class="col-md-12 col-12">
             <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title">Upload Front ID for Data Fetching</h4>
-                </div>
-                <div class="form-container container">
-                    <div class="row">
-                        {{-- <div class="col-6">
-                            <form onsubmit="return false" method="post" enctype="multipart/form-data"
-                                id="FetchApiForm3">
-                                @csrf
-                                <div class="mb-1">
-                                    <label class="form-label" for="first-name-icon">Emirate Front ID:</label>
-                                    <div class="input-group input-group-merge">
-                                        <input type="file" name="front_img" id="front_img"
-                                            onchange="NameApi('{{ route('ocr-name.submit') }}','FetchApiForm3')">
-                                        <h3 class="text-center" id="loading_num1" style="display:none">
-                                            <img src="{{ asset('assets/images/loader.gif') }}"
-                                                alt="Loading" class="img-fluid text-center offset-md-6"
-                                                style="width:35px;">
-                                        </h3>
-                                        <div class="form-group hidden d-none">
-                                            <label for="dob">Name:</label>
-                                            <input type="text" name="dob" id="name">
-                                        </div>
-                                        <div class="form-group  hidden d-none ">
-                                            <label for="dob">Emirate ID:</label>
-                                            <input type="text" name="dob" id="emirate_id_l">
-                                        </div>
-                                    </div>
-                                </div>
 
-                            </form>
-                        </div> --}}
-
-                    </div>
-                </div>
                 <div class="card-header">
                     <h4 class="card-title">Lead Information</h4>
                 </div>
                 <div class="card-body">
-                    <form class="form form-vertical" id="MyRoleForm">
+                    <form class="form form-vertical" id="MyRoleForm" onsubmit="return false">
                         <div class="col-md-6 col-sm-6 col-xs-12 form-group ">
                             <input type="hidden" name="generic_id"
                                 value="{{ $getfirst = empty($last)? 1 : $last->id }}">
@@ -102,12 +68,25 @@
                             </div>
                             <div class="col-12">
                                 <div class="mb-1">
+                                    <label class="form-label" for="first-name-icon">Users Alternative Contact #</label>
+                                    <div class="input-group input-group-merge">
+                                        <span class="input-group-text"><i data-feather="user"></i></span>
+                                        <input type="tel" maxlength="10"
+                                            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                            onkeypress="return isNumberKey(event) " id="first-name-icon"
+                                            class="form-control" name="alternative_number" placeholder="052XXXXXX"
+                                            required />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="mb-1">
                                     <label class="form-label" for="first-name-icon">Emirate ID</label>
                                     <div class="input-group input-group-merge">
                                         <span class="input-group-text"><i data-feather="user"></i></span>
                                         <input type="text" id="emirate_id" class="form-control" name="emirate_id"
                                             placeholder="Emirate ID" required
-                                            data-inputmask="'mask': '999-999-9999999-9'"
+                                            data-inputmask="'mask': '999-9999-9999999-9'"
                                             placeholder="XXXXX-XXXXXXX-X" />
                                     </div>
                                 </div>
@@ -211,6 +190,20 @@
                                         <span class="input-group-text"><i data-feather="user"></i></span>
                                         <select name="plans" id="plans" class="is_mnp form-control" required>
                                             @foreach($plan as $item)
+                                                <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="mb-1">
+                                    <label class="form-label" for="first-name-icon">Closed By</label>
+                                    <div class="input-group input-group-merge">
+                                        <span class="input-group-text"><i data-feather="user"></i></span>
+                                        <select name="shared_with" id="shared_with" class="is_mnp form-control" required>
+                                            <option value="">Select Team Leader</option>
+                                            @foreach($tl as $item)
                                                 <option value="{{ $item->id }}">{{ $item->name }}</option>
                                             @endforeach
                                         </select>

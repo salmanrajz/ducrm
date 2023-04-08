@@ -120,7 +120,7 @@
         <div class="card-body">
           <div class="row">
             <!-- Basic -->
-            <div class="col-md-6 mb-1">
+            <div class="col-md-12 mb-1">
               <label class="form-label" for="select2-basic">Basic</label>
               <select class="select2 form-select" id="select2-basic">
                 <option value="AK">Alaska</option>

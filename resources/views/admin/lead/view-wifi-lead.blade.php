@@ -1,7 +1,7 @@
 
 @extends('layouts/contentLayoutMaster')
 
-@section('title', 'DataTables')
+@section('title', 'Wifi Leads')
 
 @section('vendor-style')
   {{-- vendor css files --}}

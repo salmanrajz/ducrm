@@ -14,6 +14,7 @@
                 {{-- <span class="badge badge-light-warning rounded-pill ms-auto me-1">2</span> --}}
             </a>
             <ul class="menu-content">
+
             @role('MainAdmin')
 
                 <li>
@@ -58,6 +59,16 @@
                     </a>
                 </li>
                 <li class="">
+                    <a href="{{route('tl.scorecard')}}" class="d-flex align-items-center" target="_self">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="feather feather-circle">
+                            <circle cx="12" cy="12" r="10"></circle>
+                        </svg>
+                        <span class="menu-item text-truncate">TL Scorecard</span>
+                    </a>
+                </li>
+                <li class="">
                     <a href="{{route('plan')}}" class="d-flex align-items-center" target="_self">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -67,8 +78,40 @@
                         <span class="menu-item text-truncate">Postpaid Plans</span>
                     </a>
                 </li>
+                <li class="">
+                    <a href="{{route('main.report')}}" class="d-flex align-items-center" target="_self">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="feather feather-circle">
+                            <circle cx="12" cy="12" r="10"></circle>
+                        </svg>
+                        <span class="menu-item text-truncate">Main Report</span>
+                    </a>
+                </li>
+                <li class="">
+                <a href="{{route('training')}}" class="d-flex align-items-center" target="_self">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="feather feather-circle">
+                            <circle cx="12" cy="12" r="10"></circle>
+                        </svg>
+                        <span class="menu-item text-truncate">Add Training</span>
+                    </a>
+                </li>
+                <li class="nav-item  ">
+           <a href="{{route('NumberAssignerManager')}}" class="d-flex align-items-center" target="_self">
+               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                   class="feather feather-mail">
+                   <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                   <polyline points="22,6 12,13 2,6"></polyline>
+               </svg>
+               <span class="menu-title text-truncate">Assign Number to Manager</span>
+           </a>
+       </li>
                 @endrole()
-                @role('Sale|Verification')
+
+                @role('Sale|Verification|Activator')
                                 <li class="">
                 <a href="{{route('home')}}" class="d-flex align-items-center" target="_self">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
@@ -92,6 +135,53 @@
                 <circle cx="5" cy="12" r="1"></circle>
             </svg>
         </li>
+         @role('TeamLeader')
+
+        <li class="nav-item  ">
+            <a href="{{route('FollowUpDashboard')}}" class="d-flex align-items-center" target="_self">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="feather feather-mail">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                    <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+                <span class="menu-title text-truncate">My Team Dashboard</span>
+            </a>
+        </li>
+        <li class="nav-item  ">
+            <a href="{{route('agent_mnp_log')}}" class="d-flex align-items-center" target="_self">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="feather feather-mail">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                    <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+                <span class="menu-title text-truncate">My Team Log</span>
+            </a>
+        </li>
+        <li class="nav-item  ">
+            <a href="{{route('FollowUpDashboard')}}" class="d-flex align-items-center" target="_self">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="feather feather-mail">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                    <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+                <span class="menu-title text-truncate">My Team Follow Up</span>
+            </a>
+        </li>
+        <li class="nav-item  ">
+            <a href="{{route('tl_call_log')}}" class="d-flex align-items-center" target="_self">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="feather feather-mail">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                    <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+                <span class="menu-title text-truncate">My Call Log</span>
+            </a>
+        </li>
+                @endrole
         @role('Sale')
 
         <li class="nav-item  ">
@@ -124,7 +214,18 @@
                     <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
                     <polyline points="22,6 12,13 2,6"></polyline>
                 </svg>
-                <span class="menu-title text-truncate">Add Postpaid Lead</span>
+                <span class="menu-title text-truncate">Add Postpaid (P2P/MNP) Lead</span>
+            </a>
+        </li>
+        <li class="nav-item  ">
+            <a href="{{route('AddNewForm')}}" class="d-flex align-items-center" target="_self">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="feather feather-mail">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                    <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+                <span class="menu-title text-truncate">Add New Sim Lead</span>
             </a>
         </li>
         <li class="nav-item  ">
@@ -138,7 +239,73 @@
                 <span class="menu-title text-truncate">View MNP Lead</span>
             </a>
         </li>
-        @endrole('Sale')
+        <li class="navigation-header">
+            <span>Training Section</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="feather feather-more-horizontal">
+                <circle cx="12" cy="12" r="1"></circle>
+                <circle cx="19" cy="12" r="1"></circle>
+                <circle cx="5" cy="12" r="1"></circle>
+            </svg>
+        </li>
+         <li class="nav-item  ">
+            <a href="{{route('training.page','1')}}" class="d-flex align-items-center" target="_self">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="feather feather-mail">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                    <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+                <span class="menu-title text-truncate">Training</span>
+            </a>
+        </li>
+        <li class="navigation-header">
+            <span>Call Log Section</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="feather feather-more-horizontal">
+                <circle cx="12" cy="12" r="1"></circle>
+                <circle cx="19" cy="12" r="1"></circle>
+                <circle cx="5" cy="12" r="1"></circle>
+            </svg>
+        </li>
+         <li class="nav-item  ">
+            <a href="{{route('my_call_log')}}" class="d-flex align-items-center" target="_self">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="feather feather-mail">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                    <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+                <span class="menu-title text-truncate">My Call Log</span>
+            </a>
+        </li>
+         <li class="nav-item  ">
+            <a href="{{route('MyCallLogDashboard')}}" class="d-flex align-items-center" target="_self">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="feather feather-mail">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                    <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+                <span class="menu-title text-truncate">My Call Dashboard</span>
+            </a>
+        </li>
+        @endrole
+        @role('Manager')
+        <li class="nav-item  ">
+           <a href="{{route('NumberAssignerUser')}}" class="d-flex align-items-center" target="_self">
+               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                   class="feather feather-mail">
+                   <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                   <polyline points="22,6 12,13 2,6"></polyline>
+               </svg>
+               <span class="menu-title text-truncate">Assign Number to User</span>
+           </a>
+       </li>
+        @endrole
 
         {{-- <li class="nav-item  ">
             <a href="https://ducrm.test/app/chat" class="d-flex align-items-center" target="_self">

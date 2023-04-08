@@ -52,13 +52,11 @@
                     <h4 class="card-title">Lead Information</h4>
                 </div>
                 <div class="card-body">
-                    <form class="form form-vertical" id="MyRoleForm">
+                    <form class="form form-vertical" id="MyRoleForm" onsubmit="return false">
                         <div class="col-md-6 col-sm-6 col-xs-12 form-group ">
                             <input class="form-control " id="leadno"
                                 value="{{$data->lead_no}}"
                                 placeholder="Lead Number" type="text" disabled>
-                            {{-- <input type="hidden" name="lead_type" id="type" value="{{ $ptype }}"> --}}
-                            <!-- <span class="fa fa-lock form-control-feedback left" aria-hidden="true"></span> -->
                         </div>
                         <div class="row">
                             <div class="col-12">
@@ -71,128 +69,22 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12">
-                                <div class="mb-1">
-                                    <label class="form-label" for="first-name-icon">Email</label>
-                                    <div class="input-group input-group-merge">
-                                        <span class="input-group-text"><i data-feather="user"></i></span>
-                                        <input type="text" id="first-name-icon" class="form-control" name="email"
-                                            placeholder="Email" required value="{{$data->email}}" disabled/>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="mb-1">
-                                    <label class="form-label" for="first-name-icon">Users Contact #</label>
-                                    <div class="input-group input-group-merge">
-                                        <span class="input-group-text"><i data-feather="user"></i></span>
-                                        <input type="tel" maxlength="10"
-                                            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                            onkeypress="return isNumberKey(event) " id="first-name-icon"
-                                            class="form-control" name="contact_number" placeholder="052XXXXXX" value="{{$data->customer_number}}" disabled
-                                            required />
-                                    </div>
-                                </div>
-                            </div>
+
                             <div class="col-12">
                                 <div class="mb-1">
                                     <label class="form-label" for="first-name-icon">Emirate ID</label>
                                     <div class="input-group input-group-merge">
                                         <span class="input-group-text"><i data-feather="user"></i></span>
                                         <input type="text" id="emirate_id" class="form-control" name="emirate_id"
-                                            {{-- placeholder="Emirate ID" required --}}
-                                            {{-- data-inputmask="'mask': '999-999-9999999-9'" --}}
-                                            {{-- placeholder="XXXXX-XXXXXXX-X" --}}
                                             value="{{$data->emirate_id}}" disabled/>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="col-12">
-                                <div class="mb-1">
-                                    <label class="form-label" for="first-name-icon">Nationality/Citizen</label>
-                                    <div class="input-group input-group-merge">
-                                        <span class="input-group-text"><i data-feather="box"></i></span>
-                                        <select name="nationality" id="nationality" class="is_mnp form-control" disabled
-                                            required>
-                                            @foreach($country as $item)
-                                                <option value="{{ $item->name }}" {{$data->nationality == $item->name ? 'selected' : ''}}>{{ $item->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="mb-1">
-                                    <label class="form-label" for="first-name-icon">Gender</label>
-                                    <div class="input-group input-group-merge">
-                                        <span class="input-group-text"><i data-feather="user"></i></span>
-                                        <select name="gender" id="gender" class="is_mnp form-control" disabled>
-                                            <option value="Male" {{$data->gender == 'Male' ? 'selected' : ''}}>Male</option>
-                                            <option value="Female" {{$data->gender == 'Female' ? 'selected' : ''}}>Female</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
 
-                            <div class="col-12">
-                                <div class="mb-1">
-                                    <label class="form-label" for="first-name-icon">Date of Birth</label>
-                                    <div class="input-group input-group-merge">
-                                        <span class="input-group-text"><i data-feather="user"></i></span>
-                                        <input type="text" name="dob" id="dob" class="form-control" required value="{{$data->dob}}" disabled>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="mb-1">
-                                    <label class="form-label" for="first-name-icon">Emirate Expiry</label>
-                                    <div class="input-group input-group-merge">
-                                        <span class="input-group-text"><i data-feather="user"></i></span>
-                                        <input type="text" name="emirate_expiry" id="emirate_expiry"
-                                            class="form-control" value="{{$data->dob}}" disabled>
-                                    </div>
-                                </div>
-                            </div>
 
-                            <div class="col-12">
-                                <div class="mb-1">
-                                    <label class="form-label" for="first-name-icon">Emirates</label>
-                                    <div class="input-group input-group-merge">
-                                        <span class="input-group-text"><i data-feather="map"></i></span>
-                                        <select name="emirate" id="emirate" class="is_mnp form-control" required disabled>
-                                            @foreach($emirate as $item)
-                                                <option value="{{ $item->name }}" {{$data->emirate == $item->name ? 'selected' : ''}}>{{ $item->name }}</option>
-                                            @endforeach
-                                        </select> </div>
-                                </div>
-                            </div>
 
-                            <div class="col-12">
-                                <div class="mb-1">
-                                    <label class="form-label" for="first-name-icon">Additional Documents</label>
-                                    <div class="input-group input-group-merge">
-                                        <span class="input-group-text"><i data-feather="map"></i></span>
-                                        <select name="additional_docs_name" id="additional_docs_name" class="form-control" disabled>
-                                            <option value="Ejari" {{$data->additional_docs_name == 'Ejari' ? 'selected' : ''}}>Ejari</option>
-                        <option value="Tenancy contract" {{$data->additional_docs_name == 'Tenancy contract' ? 'selected' : ''}}>Tenancy contract</option>
-                        <option value="Title deed (front side)" {{$data->additional_docs_name == 'Title deed (front side)' ? 'selected' : ''}}>Title deed (front side)</option>
-                        <option value="Salary Certificate" {{$data->additional_docs_name == 'Salary Certificate' ? 'selected' : ''}}>Salary Certificate (latest 3 months (min. salary of AED 2,500 with UAE based company name. Contact details, original company stamp on letterhead is required))</option>
-                        <option value="Utility Bill" {{$data->additional_docs_name == 'Utility Bill' ? 'selected' : ''}}>Utility Bill - latest 3 months (Electricity / Water / Internet or TV / landline / broadband bill)</option>
-                        <option value="Labour Contract" {{$data->additional_docs_name == 'Labour Contract' ? 'selected' : ''}}>Labour contract (pages with Name, nationality, Passport numbers)</option>
-                                        </select> </div>
-                                </div>
-                            </div>
 
-                            <div class="col-12">
-                                <div class="mb-1">
-                                    <label class="form-label" for="first-name-icon">Remarks</label>
-                                    <div class="input-group input-group-merge">
-                                        <span class="input-group-text"><i data-feather="user"></i></span>
-                                       <input type="text" name="remarks" id="remarks" class="form-control" value="Please Verify">
-                                    </div>
-                                </div>
-                            </div>
                             <div class="col-12">
                                 <div class="mb-1">
                                     <label class="form-label" for="first-name-icon">Emirate Front ID:</label>
@@ -210,15 +102,25 @@
                                 <div class="mb-1">
                                     <label class="form-label" for="first-name-icon">Emirate Back ID:</label>
                                     {{-- <div class="input-group input-group-merge">
-                                        <input type="file" name="back_id" id="back_img"
+                                        <input type="file" name="front_id" id="front_img"
                                             class="form-control" accept="image/*">
-
                                         </h3>
+
                                     </div> --}}
-                                    <img id="myImg2" src="{{env('CDN_URL')}}/documents/{{$data->back_id}}" alt="your image" style="width:25%" onerror="this.style.display='none'"/>
+                                    <img id="myImg1" src="{{env('CDN_URL')}}/documents/{{$data->back_id}}" alt="your image" style="width:25%" onerror="this.style.display='none'"/>
                                 </div>
 
                         </div>
+                        <div class="col-12">
+                    <div class="mb-1">
+                        <label class="form-label" for="first-name-icon">Remarks</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text"><i data-feather="user"></i></span>
+                            <input type="text" name="remarks" id="remarks" class="form-control" value="Please Verify">
+                        </div>
+                    </div>
+                </div>
+
                             <div class="col-12">
                                 <div class="mb-1">
                                     <label class="form-label" for="first-name-icon">Additional Documents:</label>
@@ -255,6 +157,8 @@
         </div>
 
     </div>
+@include('admin.chat.chat')
+
 </section>
 <!-- Basic Vertical form layout section end -->
 

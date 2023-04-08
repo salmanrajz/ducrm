@@ -178,6 +178,8 @@ return [
         App\Providers\RouteServiceProvider::class,
         // custom theme menu provider
         App\Providers\MenuServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class,
+
     ],
 
     /*
@@ -194,6 +196,8 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         // custom theme helper
         'Helper' => App\Helpers\Helpers::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+
     ])->toArray(),
 
 ];

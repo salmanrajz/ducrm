@@ -2,6 +2,10 @@
 
 @section('title', 'MNP | P2P Leads')
 
+@section('vendor-style')
+  <!-- vendor css files -->
+  <link rel="stylesheet" href="{{ asset(mix('vendors/css/forms/select/select2.min.css')) }}">
+@endsection
 @section('content')
 <!-- Basic Horizontal form layout section start -->
 
@@ -89,13 +93,13 @@
                 </div>
                 <div class="col-12">
                     <div class="mb-1">
-                        <label class="form-label" for="first-name-icon">Users Contact #</label>
+                        <label class="form-label" for="first-name-icon">Customer Contact #</label>
                         <div class="input-group input-group-merge">
                             <span class="input-group-text"><i data-feather="user"></i></span>
-                            <input type="tel" maxlength="10"
+                            <input type="tel" maxlength="12"
                                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                 onkeypress="return isNumberKey(event) " id="first-name-icon" class="form-control"
-                                name="contact_number" placeholder="052XXXXXX" required />
+                                name="contact_number" placeholder="9715XXXXXXXX" required />
                         </div>
                     </div>
                 </div>
@@ -253,19 +257,23 @@
                     </div>
                 </div>
                 {{-- IMO --}}
-                <div class="col-12">
-                    <div class="mb-1">
-                        <label class="form-label" for="first-name-icon">Plans</label>
-                        <div class="input-group input-group-merge">
-                            <span class="input-group-text"><i data-feather="user"></i></span>
-                            <select name="plans" id="plans" class="is_mnp form-control" required>
+                <div class="col-md-12 mb-1">
+              <label class="form-label" for="select2-basic">Plans</label>
+              <select name="plans" id="select2-basic2" class="is_mnp form-control select2 " required>
                                 @foreach($plan as $item)
                                     <option value="{{ $item->id }}">{{ $item->plan_name }}</option>
                                 @endforeach
                             </select>
+            </div>
+                {{-- <div class="col-12 col-md-12 row">
+                    <div class="mb-1">
+                        <label class="form-label" for="first-name-icon">Plans</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text"><i data-feather="user"></i></span>
+
                         </div>
                     </div>
-                </div>
+                </div> --}}
                 <div class="col-12">
                     <div class="mb-1">
                         <label class="form-label" for="first-name-icon">Remarks</label>
@@ -351,13 +359,22 @@
 
 
 @endsection<!-- Basic Floating Label Form section end -->
+@section('vendor-script')
+  <!-- vendor files -->
+  <script src="{{ asset(mix('vendors/js/forms/select/select2.full.min.js')) }}"></script>
+@endsection
 @section('page-script')
 <!-- Page js files -->
 <script src="{{ asset(mix('js/custom.js')) }}"></script>
 <!-- Page js files -->
 <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/3/jquery.inputmask.bundle.js"></script>
+<script src="{{ asset(mix('js/scripts/forms/form-select2.js')) }}"></script>
+
 <script>
     $(":input").inputmask();
 
 </script>
 @endsection
+
+
+

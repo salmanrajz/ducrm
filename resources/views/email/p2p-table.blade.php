@@ -63,7 +63,7 @@
 
             <tr style="padding-left:20px;border:2px solid black">
                 <td style="padding-left:20px;border:2px solid black">Dealer ID</td>
-                <td style="padding-left:20px;border:2px solid black">TE 151</td>
+                <td style="padding-left:20px;border:2px solid black">TE151</td>
             </tr>
             @if ($lead['sim_type'] == 'exist')
             @else

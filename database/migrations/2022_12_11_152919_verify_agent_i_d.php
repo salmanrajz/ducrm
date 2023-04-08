@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::table('verification_forms', function (Blueprint $table) {
             //
-            $table->integer('verify_agent');x
+            $table->integer('verify_agent');
         });
     }
 

@@ -36,6 +36,21 @@
             </div>
               <div class="col-12">
                 <div class="mb-1">
+                  <label class="form-label" for="first-name-icon">CRM Plan Name</label>
+                  <div class="input-group input-group-merge">
+                    <span class="input-group-text"><i data-feather="user"></i></span>
+                    <input
+                      type="text"
+                      id="first-name-icon"
+                      class="form-control"
+                      name="plan_names_du"
+                      placeholder="CRM Plan Name"
+                    />
+                  </div>
+                </div>
+            </div>
+              <div class="col-12">
+                <div class="mb-1">
                   <label class="form-label" for="first-name-icon">Local Minutes</label>
                   <div class="input-group input-group-merge">
                     <span class="input-group-text"><i data-feather="user"></i></span>
@@ -178,7 +193,7 @@
                 <div class="mb-1">
                     <label class="form-label" for="first-name-icon">{{++$key}} - {{$item->plan_name}}
                     </label>
-                    <i data-feather='edit' class="float-right right" onclick="window.location.href='{{route('product.edit',$item->id)}}'"></i>
+                    <i data-feather='edit' class="float-right right" onclick="window.location.href='{{route('plan.edit',$item->id)}}'"></i>
                 </div>
                 @endforeach
               </div>

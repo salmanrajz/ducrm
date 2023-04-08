@@ -1179,6 +1179,12 @@
     "/images/docs/sanctum-logout-api.png": "/images/docs/sanctum-logout-api.png",
     "/images/docs/sanctum-register-api.jpg": "/images/docs/sanctum-register-api.jpg",
     "/images/docs/user.PNG": "/images/docs/user.PNG",
+    "/images/du-icons/active.png": "/images/du-icons/active.png",
+    "/images/du-icons/follow-up.png": "/images/du-icons/follow-up.png",
+    "/images/du-icons/in-process.png": "/images/du-icons/in-process.png",
+    "/images/du-icons/pending.png": "/images/du-icons/pending.png",
+    "/images/du-icons/reject.png": "/images/du-icons/reject.png",
+    "/images/du-icons/verified.png": "/images/du-icons/verified.png",
     "/images/elements/apple-watch.png": "/images/elements/apple-watch.png",
     "/images/elements/beats-headphones.png": "/images/elements/beats-headphones.png",
     "/images/elements/decore-left.png": "/images/elements/decore-left.png",
@@ -1294,6 +1300,7 @@
     "/images/jstree/themes/default-dark/32px.png": "/images/jstree/themes/default-dark/32px.png",
     "/images/jstree/themes/default-dark/40px.png": "/images/jstree/themes/default-dark/40px.png",
     "/images/jstree/themes/default-dark/throbber.gif": "/images/jstree/themes/default-dark/throbber.gif",
+    "/images/loader/loader.gif": "/images/loader/loader.gif",
     "/images/logo/favicon.ico": "/images/logo/favicon.ico",
     "/images/logo/logo.png": "/images/logo/logo.png",
     "/images/logo/logo.svg": "/images/logo/logo.svg",
@@ -1441,6 +1448,5 @@
     "/data/projects-list.json": "/data/projects-list.json",
     "/data/search.json": "/data/search.json",
     "/data/table-datatable.json": "/data/table-datatable.json",
-    "/data/user-list.json": "/data/user-list.json",
-    "/images/loader/loader.gif": "/images/loader/loader.gif"
+    "/data/user-list.json": "/data/user-list.json"
 }

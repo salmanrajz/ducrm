@@ -446,11 +446,11 @@
                         <input class="form-control " id="province_original_id1" data-inputmask="'mask': '9999-9'"
                         data-validate-length-range="6" data-validate-words="2" name="emirate_number" placeholder="Emirate ID" type="num" value="{{ $operation->emirate_id }}">
                         @else
-                        <input class="form-control " id="province_original_id1" data-inputmask="'mask': '999-999-9999999-9'"
+                        <input class="form-control " id="province_original_id1" data-inputmask="'mask': '999-9999-9999999-9'"
                         data-validate-length-range="6" data-validate-words="2" name="emirate_number" placeholder="Emirate ID" type="num" value="{{ $operation->emirate_id }}">
                         @endif
                       @else
-                      <input class="form-control " id="province_original_id1" data-inputmask="'mask': '999-999-9999999-9'"
+                      <input class="form-control " id="province_original_id1" data-inputmask="'mask': '999-9999-9999999-9'"
                         data-validate-length-range="6" data-validate-words="2" name="emirate_number" placeholder="Emirate ID" type="num" value="{{ $operation->emirate_id }}">
                       @endif
 
@@ -521,6 +521,7 @@
                       <option value="New" @if ($operation->lead_type == "HomeWifi") {{ 'selected' }} @endif>HomeWifi</option>
                       <option value="MNP" @if ($operation->lead_type == "MNP") {{ 'selected' }} @endif>MNP</option>
                       <option value="P2P" @if ($operation->lead_type == "P2P") {{ 'selected' }} @endif>P2P</option>
+                      <option value="P2P" @if ($operation->lead_type == "New") {{ 'selected' }} @endif>New</option>
                       {{-- <option value="Elife" @if ($operation->sim_type == "Elife") {{ 'selected' }} @endif>Elife</option> --}}
                       {{-- <option value="HomeWifi" @if ($operation->sim_type == "HomeWifi") {{ 'selected' }} @endif>Home Wifi</option> --}}
                     </select>
@@ -556,14 +557,14 @@
                   </h3>
                 </div>
               </div>
-               @if($operation->sim_type == 'Elife' || $operation->sim_type == 'HomeWifi')
+               @if($operation->lead_type == 'Elife' || $operation->lead_type == 'HomeWifi')
                 <div class="container row" style="background:#EEEEEE;border:1px solid #1C6EA4">
                 <div class="col-md-6 col-lg-6 col-xs-12 col-sm-12">
                   <h4 class="">DOB</h4>
                 </div>
                 <div class="col-md-6 col-lg-6 col-xs-12 col-sm-12">
                   <h4 class="">
-                    <input type="date" name="dob" id="dob">
+                    <input type="date" name="dob" id="dob" value="{{$operation->dob}}">
                   </h4>
                   <h3 class="details red">
                   </h3>
@@ -583,12 +584,47 @@
                                 <span class="input-group-text"><i data-feather="user"></i></span>
                                 <select name="plans" id="plans" class="is_mnp form-control" required>
                                     @foreach($plan as $item)
-                                        <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                        <option value="{{ $item->id }}" {{$item->id == $operation->plans ? 'selected' : ''}} id="{{$item->id}}" >{{ $item->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
                     </div>
+
+               @elseif($operation->lead_type == 'New')
+                <div class="col-12">
+                         <div class="mb-1">
+                            <label class="form-label" for="first-name-icon">Postpaid Plan</label>
+                            <div class="input-group input-group-merge">
+                                <span class="input-group-text"><i data-feather="user"></i></span>
+                                <select name="plans" id="plans" class="is_mnp form-control" required>
+                                    @foreach($mnpplan as $item)
+                                        <option value="{{ $item->id }}" {{$operation->plans == $item->id ? 'selected' : ''}} >{{ $item->plan_name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+ <div class="col-8">
+                               <div class="mb-1">
+                                   <label class="form-label" for="first-name-icon">Refference ID By DU</label>
+                                   <div class="input-group input-group-merge">
+                                       <span class="input-group-text"><i data-feather="user"></i></span>
+
+                                       <input type="text" name="refference_id" id="refference_id" class="form-control">
+                                   </div>
+                               </div>
+                           </div>
+                           <div class="col-8">
+                                            <div class="mb-1">
+                                                <label class="form-label" for="first-name-icon">4G/5G Number By DU</label>
+                                                <div class="input-group input-group-merge">
+                                                    <span class="input-group-text"><i data-feather="user"></i></span>
+
+                                                    <input type="text" name="work_order_num" id="work_order_num" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
                @elseif($operation->lead_type == 'MNP' || $operation->lead_type == 'P2P')
                <div class="col-12">
                         <div class="mb-1">
@@ -597,7 +633,7 @@
                                 <span class="input-group-text"><i data-feather="user"></i></span>
                                 <select name="plans" id="plans" class="is_mnp form-control" required>
                                     @foreach($mnpplan as $item)
-                                        <option value="{{ $item->id }}">{{ $item->plan_name }}</option>
+                                        <option value="{{ $item->id }}" {{$operation->plans == $item->id ? 'selected' : ''}} >{{ $item->plan_name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -659,7 +695,7 @@
 
 
                   </div>
-                  @if($operation->lead_type == 'MNP')
+                  {{-- @if($operation->lead_type == 'MNP')
                   <div class="col-8">
                                <div class="mb-1">
                                    <label class="form-label" for="first-name-icon">Refference ID By DU</label>
@@ -670,17 +706,29 @@
                                    </div>
                                </div>
                            </div>
-               <div class="col-8">
-                                <div class="mb-1">
-                                    <label class="form-label" for="first-name-icon">Work Order By DU</label>
-                                    <div class="input-group input-group-merge">
-                                        <span class="input-group-text"><i data-feather="user"></i></span>
+                @elseif($operation->lead_type == 'HomeWifi')
+                <div class="col-8">
+                               <div class="mb-1">
+                                   <label class="form-label" for="first-name-icon">Refference ID By DU</label>
+                                   <div class="input-group input-group-merge">
+                                       <span class="input-group-text"><i data-feather="user"></i></span>
 
-                                        <input type="text" name="work_order_num" id="work_order_num" class="form-control">
-                                    </div>
-                                </div>
-                            </div>
-               @endif
+                                       <input type="text" name="refference_id" id="refference_id" class="form-control">
+                                   </div>
+                               </div>
+                           </div>
+                           <div class="col-8">
+                                            <div class="mb-1">
+                                                <label class="form-label" for="first-name-icon">4G/5G Number By DU</label>
+                                                <div class="input-group input-group-merge">
+                                                    <span class="input-group-text"><i data-feather="user"></i></span>
+
+                                                    <input type="text" name="work_order_num" id="work_order_num" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                        @endif --}}
+
 
                    <div class="col-8">
                                 <div class="mb-1">
@@ -729,8 +777,11 @@
                   {{-- <button type="button" class="btn btn-info" onclick="VerifyLead('{{route('verified.today')}}','pre-verification-form','{{route('verification.index')}}')">Verified Need Today</button> --}}
                   {{-- <button type="button" class="btn btn-danger" onclick="VerifyLead('{{route('not.answer')}}','pre-verification-form','{{route('verification.index')}}')">Not Answer</button> --}}
                   @if($operation->lead_type == 'P2P' || $operation->lead_type == 'MNP')
-                  <input type="button" value="Verified" class="btn btn-success" name="upload" onclick="VerifyLead('{{route('VerifyPostPaidLeads')}}','pre-verification-form','{{route('home')}}')">
-                  <input type="button" value="Follow Up" class="btn btn-primary" name="reject" onclick="VerifyLead('{{route('followupleads')}}','pre-verification-form','{{route('home')}}')">
+                    <input type="button" value="Verified" class="btn btn-success" name="upload" onclick="VerifyLead('{{route('VerifyPostPaidLeads')}}','pre-verification-form','{{route('home')}}')">
+                    <input type="button" value="Follow Up" class="btn btn-primary" name="reject" onclick="VerifyLead('{{route('followupleads')}}','pre-verification-form','{{route('home')}}')">
+                  @elseif($operation->lead_type == 'New')
+                    <input type="button" value="Verified" class="btn btn-success" name="upload" onclick="VerifyLead('{{route('VerifyPostPaidLeadsNew')}}','pre-verification-form','{{route('home')}}')">
+                    <input type="button" value="Follow Up" class="btn btn-primary" name="reject" onclick="VerifyLead('{{route('followupleads')}}','pre-verification-form','{{route('home')}}')">
                   @else
                   <input type="button" value="Verified" class="btn btn-success" name="upload" onclick="VerifyLead('{{route('verifyLead')}}','pre-verification-form','{{route('home')}}')">
                   <input type="button" value="Reject" class="btn btn-danger" name="reject" onclick="VerifyLead('{{route('RejectLeads')}}','pre-verification-form','{{route('home')}}')">

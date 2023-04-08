@@ -131,7 +131,7 @@
                             <span class="input-group-text"><i data-feather="user"></i></span>
                             <input type="text" id="emirate_id" class="form-control" name="emirate_id"
                                 placeholder="Full Emirate ID" required data-inputmask="'mask': '999-9999-9999999-9'"
-                                placeholder="XXXXX-XXXXXXX-X" />
+                                placeholder="XXXXX-XXXXXXX-X" value="{{$data->emirate_id}}"/>
                         </div>
                     </div>
                 </div>

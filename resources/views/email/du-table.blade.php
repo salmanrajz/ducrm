@@ -97,11 +97,13 @@
             </tr>
             <tr style="padding-left:20px;border:2px solid black">
                 <td style="padding-left:20px;border:2px solid black">Order ID</td>
-                <td style="padding-left:20px;border:2px solid black"></td>
+                <td style="padding-left:20px;border:2px solid black">
+                    {{$lead->reff_id}}
+                </td>
             </tr>
             <tr style="padding-left:20px;border:2px solid black">
                 <td style="padding-left:20px;border:2px solid black">Dealer ID</td>
-                <td style="padding-left:20px;border:2px solid black">TE 151</td>
+                <td style="padding-left:20px;border:2px solid black">TE151</td>
             </tr>
             <tr style="padding-left:20px;border:2px solid black">
                 <td style="padding-left:20px;border:2px solid black">Address</td>
@@ -142,6 +144,9 @@
     {{-- @if($lead['device']) --}}
 
     <footer>
+        <p>
+            <b>Verification has been done from our side.</b>
+        </p>
         <p>
             Best Regards,
         </p>

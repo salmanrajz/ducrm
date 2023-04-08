@@ -24,10 +24,10 @@
         <h3>BACK ID</h3>
         <img src="{{public_path('documents/'.$data_for_pdf['back'])}}" alt="" style="width:500px;">
         @endif
-        @if (!empty($data_for_pdf['additional_documents']))
+        {{-- @if (!empty($data_for_pdf['additional_documents']))
         <h3>Additional Document</h3>
             <img src="{{public_path('documents/'.$data_for_pdf['additional_documents'])}}" alt="" >
-        @endif
+        @endif --}}
     {{-- <img src="{{asset('documents/'.$decoded)}}" alt="" style="width:200px;"> --}}
         {{-- <img src="{{asset('document/'$front)}}" alt=""> --}}
         {{-- <img src="{{asset('document/'$back)}}" alt=""> --}}

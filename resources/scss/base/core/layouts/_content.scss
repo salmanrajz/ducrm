@@ -472,3 +472,41 @@ html {
     }
   }
 }
+
+
+/* PERSONAL CSS */
+#follow_up_div{
+    background: linear-gradient(90deg, #3F2B96 0%, #A8C0FF 100%);
+    /* background:#58c8ea !important; */
+    border-radius: 20px;
+}
+#active_div {
+    background:linear-gradient(90deg, rgb(88 234 187) 0%, rgba(88, 200, 234, 1) 40%, rgba(0, 157, 255, 1) 100%) !important;
+    /* background: #5858ea !important; */
+    border-radius: 20px;
+}
+#pending_div {
+    background: linear-gradient(90deg, #FC466B 0%, #3F5EFB 100%) !important;
+    /* background: #ea5858 !important; */
+    border-radius: 20px;
+}
+#rejected_div {
+    background: linear-gradient(90deg, #fcff9e 0%, #c67700 100%);
+    /* background: #efa217fc !important; */
+    border-radius: 20px;
+}
+#pending_div {
+    /* background: #ea9558 !important; */
+    border-radius: 20px;
+}
+#process_div {
+background: linear-gradient(90deg, #00d2ff 0%, #3a47d5 100%);
+    /* background: #588ceadb !important; */
+    border-radius: 20px;
+}
+#verified_div {
+    background: linear-gradient(90deg, #d53369 0%, #daae51 100%);
+    /* background: #ea5858 !important; */
+    border-radius: 20px;
+}
+.table-responsive{font-weight:300 !important;}

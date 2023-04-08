@@ -3,6 +3,7 @@
 @section('title', 'Training')
 
 @section('content')
+
 <!-- Basic Horizontal form layout section start -->
 
 <!-- Basic Horizontal form layout section end -->

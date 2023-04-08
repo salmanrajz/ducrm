@@ -17,7 +17,7 @@
                     <h4 class="card-title">Add Users</h4>
                 </div>
                 <div class="card-body">
-                    <form class="form form-vertical" id="MyRoleForm">
+                    <form class="form form-vertical" id="MyRoleForm" onsubmit="return false">
                         <div class="row">
                             <div class="col-12">
                                 <div class="mb-1">
@@ -118,7 +118,7 @@
                             </div>
                             <div class="col-12">
                                 <button type="submit" class="btn btn-primary me-1"
-                                    onclick="SavingActivationLead('{{ route('user.add') }}', 'MyRoleForm','{{ route('role') }}')">Submit</button>
+                                    onclick="SavingActivationLead('{{ route('user.add') }}', 'MyRoleForm','{{ route('users') }}')">Submit</button>
                                 {{-- <button type="reset" class="btn btn-outline-secondary">Reset</button> --}}
                             </div>
                         </div>
@@ -139,12 +139,31 @@
 
                                 <div class="mb-1">
                                     <label class="form-label" for="first-name-icon">{{ ++$key }} -
-                                        {{ $item->email }} - {{$item->role}}
+                                        {{ $item->email }} - {{$item->role}} - {{$item->sl}}
                                     </label>
-                                    <i data-feather='edit' class="float-right right"
-                                        onclick="window.location.href='{{ route('user.edit',$item->id) }}'"></i>
-                                    <i data-feather='eye' class="float-right right"
-                                        onclick="window.location.href='{{ route('user.edit',$item->id) }}'"></i>
+                                    {{-- <i data-feather='eye' class="float-right right"
+                                        onclick="window.location.href='{{ route('user.edit',$item->id) }}'"></i> --}}
+                                        <span>
+
+                                            @if($item->deleted_at != '')
+                                            <a href="{{route('user.destroy',$item->id)}}" onclick="return confirm('Are you sure you want to Enable this user?');">
+                                                {{-- <i class="fa fa-key" data-feather='trash'></i> --}}
+                                                <i data-feather='rotate-ccw' data-toggle="tooltip" title="Enable User"></i>
+                                                {{-- <i data-toggle="tooltip" title="Delete Data" data-feather='trash' ></i> --}}
+
+                                            </a>
+                                            {{-- Active --}}
+                                            @else
+                                            <i data-feather='edit' class="float-right right"
+                                            onclick="window.location.href='{{ route('user.edit',$item->id) }}'"></i>
+                                        {{-- De Active --}}
+                                        <a href="{{route('user.destroy',$item->id)}}" onclick="return confirm('Are you sure you want to Disabled this user?');">
+                                            <i data-toggle="tooltip" title="Delete Data" data-feather='trash' ></i>
+                                                        {{-- <i class="fa fa-recycle"></i> --}}
+                                                    </a>
+                                                    @endif
+                                            {{-- <i data-toggle="tooltip" title="Delete Data" data-feather='trash' ></i> --}}
+                        </span>
                                 </div>
                             @endforeach
                         </div>

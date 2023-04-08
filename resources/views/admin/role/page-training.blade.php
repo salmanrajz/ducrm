@@ -50,9 +50,9 @@
 
               <div class="col-12">
                 @if($role->id != 1)
-                <button type="button" class="btn btn-primary me-1" onclick="window.location.href='{{route('training.page',$role->id - 1)}}'">Previous</button>
+                <button type="button" class="btn btn-primary me-1" onclick="window.location.href='{{route('training.page',$role->id - 1)}}'">Previous Topic</button>
                 @endif
-                <button type="button" class="btn btn-primary me-1" onclick="window.location.href='{{route('training.page',$role->id + 1)}}'">Next</button>
+                <button type="button" class="btn btn-primary me-1" onclick="window.location.href='{{route('training.page',$role->id + 1)}}'">Next Topic</button>
                 {{-- <button type="reset" class="btn btn-outline-secondary">Reset</button> --}}
               </div>
             </div>
@@ -108,7 +108,7 @@ var pdfDoc = null,
     pageNum = 1,
     pageRendering = false,
     pageNumPending = null,
-    scale = 0.8,
+    scale = 1.3,
     canvas = document.getElementById('the-canvas'),
     ctx = canvas.getContext('2d');
 

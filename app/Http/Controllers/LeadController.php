@@ -8,6 +8,7 @@ use App\Models\HomeWifiPlan;
 use App\Models\lead_sale;
 use App\Models\plan;
 use App\Models\remark;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -19,53 +20,131 @@ class LeadController extends Controller
     public function ViewWifiLead(Request $request){
         $role = auth()->user()->role;
 
-if (auth()->user()->role == 'Verification') {
-    $data = lead_sale::select('lead_sales.customer_name', 'lead_sales.id', 'lead_sales.email', 'lead_sales.customer_number', 'status_codes.status_name as status', 'home_wifi_plans.name as plan_name', 'lead_sales.lead_no')
-    ->where('lead_type', 'HomeWifi')
-    ->Join(
-        'home_wifi_plans',
-        'home_wifi_plans.id',
-        'lead_sales.plans'
-    )
-    ->Join(
-        'status_codes',
-        'status_codes.status_code',
-        'lead_sales.status'
-    )
-        ->when($role, function ($q) use ($role) {
-            if ($role == 'Sale') {
-                return $q->where('lead_sales.saler_id', auth()->user()->id);
-            // return $q->where('numberdetails.identity', 'EidSpecial');
-            } elseif ($role == 'Verification') {
-                return $q->where('lead_sales.status', '1.01');
-            }
-        })
-    ->get();
-    $mnp = lead_sale::select('lead_sales.customer_name', 'lead_sales.id', 'lead_sales.email', 'lead_sales.customer_number', 'status_codes.status_name as status', 'plans.plan_name', 'lead_sales.lead_no','lead_sales.lead_type')
-    ->whereIn('lead_type', ['MNP','P2P'])
-    // ->where('lead_type','HomeWifi')
-    ->Join(
-        'plans',
-        'plans.id',
-        'lead_sales.plans'
-    )
-    ->Join(
-        'status_codes',
-        'status_codes.status_code',
-        'lead_sales.status'
-    )
-        ->when($role, function ($q) use ($role) {
-            if ($role == 'Sale') {
-                return $q->where('lead_sales.saler_id', auth()->user()->id);
-            // return $q->where('numberdetails.identity', 'EidSpecial');
-            } elseif ($role == 'Verification') {
-                return $q->where('lead_sales.status', '1.01');
-            }
-        })
-    ->get();
+        if (auth()->user()->role == 'Verification') {
+        $data = lead_sale::select('lead_sales.customer_name', 'lead_sales.id', 'lead_sales.email', 'lead_sales.customer_number', 'status_codes.status_name as status', 'home_wifi_plans.name as plan_name', 'lead_sales.lead_no')
+        ->where('lead_type', 'HomeWifi')
+        ->Join(
+            'home_wifi_plans',
+            'home_wifi_plans.id',
+            'lead_sales.plans'
+        )
+        ->Join(
+            'status_codes',
+            'status_codes.status_code',
+            'lead_sales.status'
+        )
+            ->when($role, function ($q) use ($role) {
+                if ($role == 'Sale') {
+                    return $q->where('lead_sales.saler_id', auth()->user()->id);
+                // return $q->where('numberdetails.identity', 'EidSpecial');
+                } elseif ($role == 'Verification') {
+                    return $q->where('lead_sales.status', '1.01');
+                }
+            })
+        ->get();
+        $mnp = lead_sale::select('lead_sales.customer_name', 'lead_sales.id', 'lead_sales.email', 'lead_sales.customer_number', 'status_codes.status_name as status', 'plans.plan_name', 'lead_sales.lead_no','lead_sales.lead_type')
+        ->whereIn('lead_type', ['MNP','P2P','New'])
+        // ->where('lead_type','HomeWifi')
+        ->Join(
+            'plans',
+            'plans.id',
+            'lead_sales.plans'
+        )
+        ->Join(
+            'status_codes',
+            'status_codes.status_code',
+            'lead_sales.status'
+        )
+            ->when($role, function ($q) use ($role) {
+                if ($role == 'Sale') {
+                    return $q->where('lead_sales.saler_id', auth()->user()->id);
+                // return $q->where('numberdetails.identity', 'EidSpecial');
+                } elseif ($role == 'Verification') {
+                    return $q->where('lead_sales.status', '1.01');
+                }
+            })
+        ->get();
 
-    // return json_encode($data);
-        return view('admin.lead.view-verification-lead', compact('data', 'mnp'));
+            // return json_encode($data);
+            return view('admin.lead.view-verification-lead', compact('data', 'mnp'));
+        }else{
+            $data = lead_sale::select('lead_sales.customer_name', 'lead_sales.id', 'lead_sales.email', 'lead_sales.customer_number', 'status_codes.status_name as status', 'home_wifi_plans.name as plan_name', 'lead_sales.lead_no')
+            ->where('lead_type', 'HomeWifi')
+            ->Join(
+                'home_wifi_plans',
+                'home_wifi_plans.id',
+                'lead_sales.plans'
+            )
+            ->Join(
+                'status_codes',
+                'status_codes.status_code',
+                'lead_sales.status'
+            )
+            ->when($role, function ($q) use ($role) {
+                if ($role == 'Sale') {
+                    return $q->where('lead_sales.saler_id', auth()->user()->id);
+                    // return $q->where('numberdetails.identity', 'EidSpecial');
+                } elseif ($role == 'Verification') {
+                    return $q->where('lead_sales.status', '1.01');
+                }
+            })
+                ->get();
+        return view('admin.lead.view-wifi-lead', compact('data'));
+
+        }
+
+    }
+    //
+    public function ViewInProcessLead(Request $request){
+        $role = auth()->user()->role;
+
+        if (auth()->user()->role == 'Activator') {
+        $data = lead_sale::select('lead_sales.customer_name', 'lead_sales.id', 'lead_sales.email', 'lead_sales.customer_number', 'status_codes.status_name as status', 'home_wifi_plans.name as plan_name', 'lead_sales.lead_no')
+        ->where('lead_type', 'HomeWifi')
+        ->Join(
+            'home_wifi_plans',
+            'home_wifi_plans.id',
+            'lead_sales.plans'
+        )
+        ->Join(
+            'status_codes',
+            'status_codes.status_code',
+            'lead_sales.status'
+        )
+            ->when($role, function ($q) use ($role) {
+                if ($role == 'Sale') {
+                    return $q->where('lead_sales.saler_id', auth()->user()->id);
+                // return $q->where('numberdetails.identity', 'EidSpecial');
+                } elseif ($role == 'Activator') {
+                    return $q->where('lead_sales.status', '1.05');
+                }
+            })
+        ->get();
+        $mnp = lead_sale::select('lead_sales.customer_name', 'lead_sales.id', 'lead_sales.email', 'lead_sales.customer_number', 'status_codes.status_name as status', 'plans.plan_name', 'lead_sales.lead_no','lead_sales.lead_type')
+        ->whereIn('lead_type', ['MNP','P2P'])
+        // ->where('lead_type','HomeWifi')
+        ->Join(
+            'plans',
+            'plans.id',
+            'lead_sales.plans'
+        )
+        ->Join(
+            'status_codes',
+            'status_codes.status_code',
+            'lead_sales.status'
+        )
+            ->when($role, function ($q) use ($role) {
+                if ($role == 'Sale') {
+                    return $q->where('lead_sales.saler_id', auth()->user()->id);
+                // return $q->where('numberdetails.identity', 'EidSpecial');
+                } elseif ($role == 'Activator') {
+                    return $q->where('lead_sales.status', '1.05');
+                }
+            })
+        ->get();
+
+            // return json_encode($data);
+            return view('admin.lead.view-verification-lead', compact('data', 'mnp'));
         }else{
             $data = lead_sale::select('lead_sales.customer_name', 'lead_sales.id', 'lead_sales.email', 'lead_sales.customer_number', 'status_codes.status_name as status', 'home_wifi_plans.name as plan_name', 'lead_sales.lead_no')
             ->where('lead_type', 'HomeWifi')
@@ -166,7 +245,24 @@ if (auth()->user()->role == 'Verification') {
         $type = 'Vocus';
         $ptype = 'HomeWifi';
         $last = lead_sale::latest()->first();
-        return view('admin.lead.add-wifi-lead',compact('plan','country','emirate','breadcrumbs','type','ptype', 'last'));
+        $tl = User::where('role','TeamLeader')->get();
+        return view('admin.lead.add-wifi-lead',compact('plan','country','emirate','breadcrumbs','type','ptype', 'last','tl'));
+    }
+    //
+    public function AddNewForm(Request $request){
+        // return $request;
+        $plan = Plan::where('status','1')->get();
+        $country = country_phone_code::select('name')->get();
+        $emirate = emirate::select('name')->where('status',1)->get();
+        // $plan = \App\Models\plan
+        $breadcrumbs = [
+            ['link' => "/", 'name' => "Home"], ['link' => "javascript:void(0)", 'name' => "Home Wifi Lead Form"]
+        ];
+        $type = 'Vocus';
+        $ptype = 'HomeWifi';
+        $last = lead_sale::latest()->first();
+        $tl = User::where('role', 'TeamLeader')->get();
+        return view('admin.lead.add-new-lead',compact('plan','country','emirate','breadcrumbs','type','ptype', 'last','tl'));
     }
     public function MNPForm(Request $request){
         // return $request;
@@ -191,6 +287,7 @@ if (auth()->user()->role == 'Verification') {
             'full_name' => 'required|string',
             'email' => 'required|string|email',
             'contact_number' => 'required',
+            'alternative_number' => 'required',
             'emirate_id' => 'required',
             'gender' => 'required',
             'nationality' => 'required',
@@ -214,6 +311,7 @@ if (auth()->user()->role == 'Verification') {
             'customer_name' => $request->full_name,
             'email' => $request->email,
             'customer_number' => $request->contact_number,
+            'alternative_number' => $request->alternative_number,
             'emirate_id' => $request->emirate_id,
             'gender' => $request->gender,
             'nationality' => $request->nationality,
@@ -229,6 +327,7 @@ if (auth()->user()->role == 'Verification') {
             'lead_type' => 'HomeWifi',
             'lead_date' => Carbon::now()->toDateTimeString(),
             'remarks' => $request->remarks,
+            'shared_with' => $request->shared_with,
         ]);
         remark::create([
             'remarks' => $request->remarks,
@@ -239,11 +338,46 @@ if (auth()->user()->role == 'Verification') {
             'user_agent_id' => auth()->user()->id,
         ]);
         //
-        $lead = lead_sale::select('lead_sales.id','lead_sales.lead_no','lead_sales.customer_name','lead_sales.customer_number','home_wifi_plans.name as plan_name','lead_sales.saler_name')
+        // $lead = lead_sale::select('lead_sales.id','lead_sales.lead_no','lead_sales.customer_name','lead_sales.customer_number','home_wifi_plans.name as plan_name','lead_sales.saler_name')
+        // ->Join(
+        //     'home_wifi_plans','home_wifi_plans.id','lead_sales.plans'
+        // )
+        // ->where('lead_sales.id',$data->id)->first();
+        // //
+        // $link = route('view.lead', $lead->id);
+        // $details = [
+        //     'lead_id' => $lead->id,
+        //     'lead_no' => $lead->lead_no,
+        //     'customer_name' => $lead->customer_name,
+        //     'customer_number' => $lead->customer_number,
+        //     'selected_number' => 'HomeWifi' .' '. $lead->plan_name,
+        //     'remarks' => $request->remarks . ' ' . ' Remarks By ' . auth()->user()->name . ' (' .  auth()->user()->email . ')',
+        //     'remarks_final' => $request->remarks . ' ' . ' Remarks By ' . auth()->user()->name . ' (' .  auth()->user()->email . ')' . ' => Agent Name: ' . $lead->saler_name,
+        //     'saler_name' => $lead->saler_name,
+        //     'link' => $link,
+        //     'agent_code' => auth()->user()->agent_code,
+        //     'number' => 923121337222,
+        //     // 'Plan' => $number,
+        //     // 'AlternativeNumber' => $alternativeNumber,
+        // ];
+        // return FunctionController::SendWhatsApp($details);
+        $lead = lead_sale::select('lead_sales.id', 'lead_sales.lead_no', 'lead_sales.customer_name', 'lead_sales.customer_number', 'home_wifi_plans.name as plan_name', 'lead_sales.saler_name', 'lead_sales.lead_type', 'call_centers.numbers')
         ->Join(
-            'home_wifi_plans','home_wifi_plans.id','lead_sales.plans'
+            'home_wifi_plans',
+            'home_wifi_plans.id',
+            'lead_sales.plans'
         )
-        ->where('lead_sales.id',$data->id)->first();
+            ->Join(
+                'users',
+                'users.id',
+                'lead_sales.saler_id'
+            )
+            ->Join(
+                'call_centers',
+                'call_centers.call_center_code',
+                'users.agent_code'
+            )
+            ->where('lead_sales.id', $data->id)->first();
         //
         $link = route('view.lead', $lead->id);
         $details = [
@@ -251,17 +385,126 @@ if (auth()->user()->role == 'Verification') {
             'lead_no' => $lead->lead_no,
             'customer_name' => $lead->customer_name,
             'customer_number' => $lead->customer_number,
-            'selected_number' => 'HomeWifi' .' '. $lead->plan_name,
+            'selected_number' => $lead->lead_type . ' ' . $lead->plan_name,
             'remarks' => $request->remarks . ' ' . ' Remarks By ' . auth()->user()->name . ' (' .  auth()->user()->email . ')',
             'remarks_final' => $request->remarks . ' ' . ' Remarks By ' . auth()->user()->name . ' (' .  auth()->user()->email . ')' . ' => Agent Name: ' . $lead->saler_name,
             'saler_name' => $lead->saler_name,
             'link' => $link,
             'agent_code' => auth()->user()->agent_code,
-            'number' => 923121337222,
+            'number' => $lead->numbers,
+            'plan' => $lead->plan_name,
+            'sim_type' => $lead->lead_type,
             // 'Plan' => $number,
             // 'AlternativeNumber' => $alternativeNumber,
         ];
-        return FunctionController::SendWhatsApp($details);
+        FunctionController::SendWhatsAppVerification($details);
+
+
+        //
+        // $remarks = remark::create
+        return response()->json(['success' => 'Added new records, please wait meanwhile we are redirecting you....!!!']);
+
+    }
+    //
+    //
+    public function NewLeadSubmit(Request $request){
+        // return $request;
+        $validatedData = Validator::make($request->all(), [
+            'full_name' => 'required|string',
+            'email' => 'required|string|email',
+            'contact_number' => 'required',
+            'alternative_number' => 'required',
+            'emirate_id' => 'required',
+            'gender' => 'required',
+            'nationality' => 'required',
+            'address' => 'required',
+            'language' => 'required',
+            'emirate' => 'required',
+            'remarks' => 'required',
+            'plans' => 'required',
+            'emirate_expiry' => 'required|date|after:tomorrow',
+            'dob' => ['before:20 years ago']
+        ]);
+        if ($validatedData->fails()) {
+            return response()->json(['error' => $validatedData->errors()->all()]);
+        }
+        //
+        // $data = Carbon::
+        //
+        // return $request->leadnumber;
+        $data = lead_sale::create([
+            'lead_no' => $request->leadnumber,
+            'customer_name' => $request->full_name,
+            'email' => $request->email,
+            'customer_number' => $request->contact_number,
+            // 'emirate_id' => $emirate_id,
+            'gender' => $request->gender,
+            'nationality' => $request->nationality,
+            'address' => $request->address,
+            'emirate' => $request->emirate,
+            'plans' => $request->plans,
+            'language' => $request->language,
+            'emirate_expiry' => $request->emirate_expiry,
+            'dob' => $request->dob,
+            'status' => '1.01',
+            'saler_name' => auth()->user()->name,
+            'saler_id' => auth()->user()->id,
+            'lead_type' => 'New',
+            'lead_date' => Carbon::now()->toDateTimeString(),
+            'remarks' => $request->remarks,
+            // 'front_id' => $front_id,
+            // 'back_id' => $back_id,
+            // 'additional_docs_photo' => $additional_docs_photo,
+            // 'additional_docs_name' => $request->additional_docs_name,
+            // 'emirate_id_count' => trim($emirate_id_count),
+            'shared_with' => $request->shared_with,
+        ]);
+        remark::create([
+            'remarks' => $request->remarks,
+            'lead_status' => '1.01',
+            'lead_id' => $data->id,
+            'lead_no' => $data->id, 'date_time' => $current_date_time = Carbon::now()->toDateTimeString(), // Produces something like "2019-03-11 12:25:00"
+            'user_agent' => 'Sale',
+            'user_agent_id' => auth()->user()->id,
+        ]);
+        //
+        $lead = lead_sale::select('lead_sales.id', 'lead_sales.lead_no', 'lead_sales.customer_name', 'lead_sales.customer_number', 'plans.plan_name', 'lead_sales.saler_name', 'lead_sales.lead_type', 'call_centers.numbers')
+        ->Join(
+            'plans',
+            'plans.id',
+            'lead_sales.plans'
+        )
+            ->Join(
+                'users',
+                'users.id',
+                'lead_sales.saler_id'
+            )
+            ->Join(
+                'call_centers',
+                'call_centers.call_center_code',
+                'users.agent_code'
+            )
+            ->where('lead_sales.id', $data->id)->first();
+        //
+        $link = route('view.lead', $lead->id);
+        $details = [
+            'lead_id' => $lead->id,
+            'lead_no' => $lead->lead_no,
+            'customer_name' => $lead->customer_name,
+            'customer_number' => $lead->customer_number,
+            'selected_number' => $lead->lead_type . ' ' . $lead->plan_name,
+            'remarks' => $request->remarks . ' ' . ' Remarks By ' . auth()->user()->name . ' (' .  auth()->user()->email . ')',
+            'remarks_final' => $request->remarks . ' ' . ' Remarks By ' . auth()->user()->name . ' (' .  auth()->user()->email . ')' . ' => Agent Name: ' . $lead->saler_name,
+            'saler_name' => $lead->saler_name,
+            'link' => $link,
+            'agent_code' => auth()->user()->agent_code,
+            'number' => $lead->numbers,
+            'plan' => $lead->plan_name,
+            'sim_type' => $lead->lead_type,
+            // 'Plan' => $number,
+            // 'AlternativeNumber' => $alternativeNumber,
+        ];
+        FunctionController::SendWhatsAppVerification($details);
 
 
         //
@@ -405,6 +648,7 @@ if (auth()->user()->role == 'Verification') {
             'additional_docs_photo' => $additional_docs_photo,
             'additional_docs_name' => $request->additional_docs_name,
             'emirate_id_count' => trim($emirate_id_count),
+            'shared_with' => $request->shared_with,
         ]);
         remark::create([
             'remarks' => $request->remarks,
@@ -415,11 +659,21 @@ if (auth()->user()->role == 'Verification') {
             'user_agent_id' => auth()->user()->id,
         ]);
         //
-        $lead = lead_sale::select('lead_sales.id','lead_sales.lead_no','lead_sales.customer_name','lead_sales.customer_number','plans.plan_name','lead_sales.saler_name','lead_sales.lead_type')
+        $lead = lead_sale::select('lead_sales.id','lead_sales.lead_no','lead_sales.customer_name','lead_sales.customer_number','plans.plan_name','lead_sales.saler_name','lead_sales.lead_type','call_centers.numbers')
         ->Join(
             'plans',
             'plans.id','lead_sales.plans'
         )
+            ->Join(
+                'users',
+                'users.id',
+                'lead_sales.saler_id'
+            )
+            ->Join(
+                'call_centers',
+                'call_centers.call_center_code',
+                'users.agent_code'
+            )
         ->where('lead_sales.id',$data->id)->first();
         //
         $link = route('view.lead', $lead->id);
@@ -434,11 +688,13 @@ if (auth()->user()->role == 'Verification') {
             'saler_name' => $lead->saler_name,
             'link' => $link,
             'agent_code' => auth()->user()->agent_code,
-            'number' => 923121337222,
+            'number' => $lead->numbers,
+            'plan' => $lead->plan_name,
+            'sim_type' => $lead->lead_type,
             // 'Plan' => $number,
             // 'AlternativeNumber' => $alternativeNumber,
         ];
-        FunctionController::SendWhatsApp($details);
+        FunctionController::SendWhatsAppVerification($details);
 
 
         //
@@ -587,13 +843,23 @@ if (auth()->user()->role == 'Verification') {
             'user_agent_id' => auth()->user()->id,
         ]);
         //
-        $lead = lead_sale::select('lead_sales.id', 'lead_sales.lead_no', 'lead_sales.customer_name', 'lead_sales.customer_number', 'plans.plan_name', 'lead_sales.saler_name', 'lead_sales.lead_type')
+        $lead = lead_sale::select('lead_sales.id', 'lead_sales.lead_no', 'lead_sales.customer_name', 'lead_sales.customer_number', 'plans.plan_name', 'lead_sales.saler_name', 'lead_sales.lead_type', 'call_centers.numbers')
         ->Join(
             'plans',
             'plans.id',
             'lead_sales.plans'
         )
-        ->where('lead_sales.id', $data2->id)->first();
+            ->Join(
+                'users',
+                'users.id',
+                'lead_sales.saler_id'
+            )
+            ->Join(
+                'call_centers',
+                'call_centers.call_center_code',
+                'users.agent_code'
+            )
+            ->where('lead_sales.id', $data->id)->first();
         //
         $link = route('view.lead', $lead->id);
         $details = [
@@ -607,11 +873,13 @@ if (auth()->user()->role == 'Verification') {
             'saler_name' => $lead->saler_name,
             'link' => $link,
             'agent_code' => auth()->user()->agent_code,
-            'number' => 923121337222,
+            'number' => $lead->numbers,
+            'plan' => $lead->plan_name,
+            'sim_type' => $lead->lead_type,
             // 'Plan' => $number,
             // 'AlternativeNumber' => $alternativeNumber,
         ];
-        FunctionController::SendWhatsApp($details);
+        FunctionController::SendWhatsAppVerification($details);
 
 
         //
@@ -668,29 +936,32 @@ if (auth()->user()->role == 'Verification') {
             'user_agent_id' => auth()->user()->id,
         ]);
         //
-        $lead = lead_sale::select('lead_sales.id','lead_sales.lead_no','lead_sales.customer_name','lead_sales.customer_number','home_wifi_plans.name as plan_name','lead_sales.saler_name','lead_sales.lead_type')
+        $lead = lead_sale::select('lead_sales.id','lead_sales.lead_no','lead_sales.customer_name','lead_sales.customer_number','plans.plan_name as plan_name','lead_sales.saler_name','lead_sales.lead_type','lead_sales.nationality','lead_sales.emirate','lead_sales.emirate_id')
         ->Join(
-            'home_wifi_plans','home_wifi_plans.id','lead_sales.plans'
+            'plans','plans.id','lead_sales.plans'
         )
         ->where('lead_sales.id',$data->id)->first();
         //
-        $link = route('view.lead', $lead->id);
+        // $link = route('view.lead', $lead->id);
         $details = [
             'lead_id' => $lead->id,
             'lead_no' => $lead->lead_no,
             'customer_name' => $lead->customer_name,
             'customer_number' => $lead->customer_number,
+            'emirate' => $lead->emirate,
+            'emirate_id' => $lead->emirate_id,
+            'nationality' => $lead->nationality,
             'selected_number' => $lead->lead_type .' '. $lead->plan_name,
-            'remarks' => $request->remarks . ' ' . ' Remarks By ' . auth()->user()->name . ' (' .  auth()->user()->email . ')',
-            'remarks_final' => $request->remarks . ' ' . ' Remarks By ' . auth()->user()->name . ' (' .  auth()->user()->email . ')' . ' => Agent Name: ' . $lead->saler_name,
-            'saler_name' => $lead->saler_name,
-            'link' => $link,
-            'agent_code' => auth()->user()->agent_code,
+            // 'remarks' => $request->remarks . ' ' . ' Remarks By ' . auth()->user()->name . ' (' .  auth()->user()->email . ')',
+            // 'remarks_final' => $request->remarks . ' ' . ' Remarks By ' . auth()->user()->name . ' (' .  auth()->user()->email . ')' . ' => Agent Name: ' . $lead->saler_name,
+            // 'saler_name' => $lead->saler_name,
+            // 'link' => $link,
+            // 'agent_code' => auth()->user()->agent_code,
             'number' => 923121337222,
             // 'Plan' => $number,
             // 'AlternativeNumber' => $alternativeNumber,
         ];
-        FunctionController::SendWhatsApp($details);
+        FunctionController::SendWhatsAppDesigner($details);
 
 
         //
@@ -821,29 +1092,32 @@ if (auth()->user()->role == 'Verification') {
             'user_agent_id' => auth()->user()->id,
         ]);
         //
-        $lead = lead_sale::select('lead_sales.id','lead_sales.lead_no','lead_sales.customer_name','lead_sales.customer_number', 'plans.plan_name','lead_sales.saler_name','lead_sales.lead_type')
+        $lead = lead_sale::select('lead_sales.id','lead_sales.lead_no','lead_sales.customer_name','lead_sales.customer_number', 'plans.plan_name','lead_sales.saler_name','lead_sales.lead_type','lead_sales.emirate_id','lead_sales.emirate','lead_sales.nationality')
         ->Join(
             'plans','plans.id','lead_sales.plans'
         )
         ->where('lead_sales.id',$data->id)->first();
         //
-        $link = route('view.lead', $lead->id);
+        // $link = route('view.lead', $lead->id);
         $details = [
             'lead_id' => $lead->id,
             'lead_no' => $lead->lead_no,
             'customer_name' => $lead->customer_name,
             'customer_number' => $lead->customer_number,
-            'selected_number' => $lead->lead_type .' '. $lead->plan_name,
-            'remarks' => $request->remarks . ' ' . ' Remarks By ' . auth()->user()->name . ' (' .  auth()->user()->email . ')',
-            'remarks_final' => $request->remarks . ' ' . ' Remarks By ' . auth()->user()->name . ' (' .  auth()->user()->email . ')' . ' => Agent Name: ' . $lead->saler_name,
-            'saler_name' => $lead->saler_name,
-            'link' => $link,
+            'emirate' => $lead->emirate,
+            'emirate_id' => $lead->emirate_id,
+            'nationality' => $lead->nationality,
+            // 'selected_number' => $lead->lead_type .' '. $lead->plan_name,
+            // 'remarks' => $request->remarks . ' ' . ' Remarks By ' . auth()->user()->name . ' (' .  auth()->user()->email . ')',
+            // 'remarks_final' => $request->remarks . ' ' . ' Remarks By ' . auth()->user()->name . ' (' .  auth()->user()->email . ')' . ' => Agent Name: ' . $lead->saler_name,
+            // 'saler_name' => $lead->saler_name,
+            // 'link' => $link,
             'agent_code' => auth()->user()->agent_code,
-            'number' => 923121337222,
+            'number' => '923121337222,9230248177588,971501230579',
             // 'Plan' => $number,
             // 'AlternativeNumber' => $alternativeNumber,
         ];
-        FunctionController::SendWhatsApp($details);
+        FunctionController::SendWhatsAppDesigner($details);
 
 
         //
@@ -958,7 +1232,7 @@ if (auth()->user()->role == 'Verification') {
         $data2->language = $request->language;
         $data2->emirate_expiry = $request->emirate_expiry;
         $data2->dob = $request->dob;
-        $data2->status = '1.13';
+        $data2->status = '1.01';
         $data2->remarks = $request->remarks;
         $data2->front_id = $front_id;
         $data2->back_id = $back_id;
@@ -975,29 +1249,35 @@ if (auth()->user()->role == 'Verification') {
             'user_agent_id' => auth()->user()->id,
         ]);
         //
-        $lead = lead_sale::select('lead_sales.id','lead_sales.lead_no','lead_sales.customer_name','lead_sales.customer_number', 'plans.plan_name','lead_sales.saler_name','lead_sales.lead_type')
-        ->Join(
-            'plans','plans.id','lead_sales.plans'
-        )
-        ->where('lead_sales.id',$data2->id)->first();
         //
-        $link = route('view.lead', $lead->id);
+        $lead = lead_sale::select('lead_sales.id', 'lead_sales.lead_no', 'lead_sales.customer_name', 'lead_sales.customer_number', 'plans.plan_name', 'lead_sales.saler_name', 'lead_sales.lead_type', 'lead_sales.emirate_id', 'lead_sales.emirate', 'lead_sales.nationality')
+        ->Join(
+            'plans',
+            'plans.id',
+            'lead_sales.plans'
+        )
+            ->where('lead_sales.id', $data->id)->first();
+        //
+        // $link = route('view.lead', $lead->id);
         $details = [
             'lead_id' => $lead->id,
             'lead_no' => $lead->lead_no,
             'customer_name' => $lead->customer_name,
             'customer_number' => $lead->customer_number,
-            'selected_number' => $lead->lead_type .' '. $lead->plan_name,
-            'remarks' => $request->remarks . ' ' . ' Remarks By ' . auth()->user()->name . ' (' .  auth()->user()->email . ')',
-            'remarks_final' => $request->remarks . ' ' . ' Remarks By ' . auth()->user()->name . ' (' .  auth()->user()->email . ')' . ' => Agent Name: ' . $lead->saler_name,
-            'saler_name' => $lead->saler_name,
-            'link' => $link,
+            'emirate' => $lead->emirate,
+            'emirate_id' => $lead->emirate_id,
+            'nationality' => $lead->nationality,
+            // 'selected_number' => $lead->lead_type .' '. $lead->plan_name,
+            // 'remarks' => $request->remarks . ' ' . ' Remarks By ' . auth()->user()->name . ' (' .  auth()->user()->email . ')',
+            // 'remarks_final' => $request->remarks . ' ' . ' Remarks By ' . auth()->user()->name . ' (' .  auth()->user()->email . ')' . ' => Agent Name: ' . $lead->saler_name,
+            // 'saler_name' => $lead->saler_name,
+            // 'link' => $link,
             'agent_code' => auth()->user()->agent_code,
             'number' => 923121337222,
             // 'Plan' => $number,
             // 'AlternativeNumber' => $alternativeNumber,
         ];
-        FunctionController::SendWhatsApp($details);
+        FunctionController::SendWhatsAppDesigner($details);
 
 
         //
@@ -1005,4 +1285,128 @@ if (auth()->user()->role == 'Verification') {
         return response()->json(['success' => 'Added new records, please wait meanwhile we are redirecting you....!!!']);
 
     }
+    //
+    //
+    public function ChatRequest(Request $request)
+    {
+        // return $request;
+        // return $data = $request->saler_id;
+        remark::create([
+            'remarks' => $request->remarks,
+            'lead_status' => '0',
+            'lead_id' => $request->id,
+            'source' => 'Chat Box',
+            'lead_no' => $request->id,
+            'date_time' => $current_date_time = Carbon::now()->toDateTimeString(), // Produces something like "2019-03-11 12:25:00"
+            'user_agent' => auth()->user()->name,
+            'user_agent_id' => auth()->user()->id,
+        ]);
+        $lead = lead_sale::find($request->id);
+        // return
+        $uk = User::find($lead->saler_id);
+        // return auth()->user()->id;
+        $data =
+            remark::select("remarks.date_time", 'users.name as user_agent', 'remarks.remarks')
+            ->Join(
+                'users',
+                'users.id',
+                'remarks.user_agent_id'
+            )
+            // ->where("remarks.user_agent_id", auth()->user()->id)
+            ->where("remarks.lead_id", $request->id)
+            ->get();
+        if($lead->lead_type == 'HomeWifi'){
+            $plan_name = HomeWifiPlan::where('id',$lead->plans)->first()->name;
+        }else{
+            $plan_name = Plan::where('id',$lead->plans)->first()->plan_name;
+        }
+        $remarks = 'Lead ID: ' . $request->id . ' => Message: ' . $request->remarks;        // event(new TaskEvent($remarks, $request->saler_id, $request->id, $uk->agent_code));
+        // @role('sale')
+        // \App\remarks_notification::create([
+        //     'leadid' => $request->id,
+        //     'userid' => auth()->user()->id,
+        //     'remarks' => $request->remarks,
+        //     'group_id' => $uk->agent_code,
+        //     'notification_type' => 'Chat',
+        //     'is_read' => '0',
+        // ]);
+        //
+        // return $lead->id;
+        $ntc = lead_sale::select('call_centers.notify_email', 'users.secondary_email', 'users.agent_code', 'call_centers.numbers', 'users.teamleader')
+            ->Join(
+                'users',
+                'users.id',
+                'lead_sales.saler_id'
+            )
+            ->Join(
+                'call_centers',
+                'call_centers.call_center_code',
+                'users.agent_code'
+            )
+            ->where('lead_sales.id', $lead->id)->first();
+        //
+        $tl = User::where('id', $ntc->teamleader)->first();
+        if ($tl) {
+            $wapnumber = $tl->phone . ',' .  $ntc->numbers;
+        } else {
+            $wapnumber = $ntc->numbers;
+        }
+
+        $link = route('view.lead', $lead->id);
+        $agent_code = $ntc->agent_code;
+        // if($agent_code == 'CC3')
+        //
+        if ($lead->sim_type == 'HomeWifi') {
+            $selected_number = 'HomeWifi';
+        } else {
+            $selected_number = $lead->selected_number;
+        }
+        // $selected_number = 'HomeWifi';
+
+        $details = [
+            'lead_id' => $lead->id,
+            'lead_no' => $lead->lead_no,
+            'customer_name' => $lead->customer_name,
+            'customer_number' => $lead->customer_number,
+            'selected_number' => $selected_number,
+            'remarks' => $request->remarks . ' ' . ' Remarks By ' . auth()->user()->name . ' (' .  auth()->user()->email . ')',
+            'remarks_final' => $request->remarks . ' ' . ' Remarks By ' . auth()->user()->name . ' (' .  auth()->user()->email . ')' . ' => Agent Name: ' . $lead->saler_name,
+            'saler_name' => $lead->saler_name,
+            'link' => $link,
+            'agent_code' => $agent_code,
+            'plan' => $plan_name,
+            'sim_type' => $lead->lead_type,
+            'number' => $wapnumber,
+            // 'Plan' => $number,
+            // 'AlternativeNumber' => $alternativeNumber,
+        ];
+        // $details = "";
+        $subject = "";
+        FunctionController::SendWhatsApp($details);
+
+
+        // \Mail::to($to)
+        // ->cc(['salmanahmed334@gmail.com'])
+        // ->queue(new \App\Mail\RemarksUpdate($details, $subject));
+        // ChatController::EmailToVerification($lead->id,$details);
+        // ChatController::EmailToNewCord($lead->id,$details,$lead->emirates);
+        // ChatController::SendToWhatsApp($details);
+        // if(auth()->user()->role != 'Emirate Coordinator'){
+
+        // ChatController::SMSToNewCord($lead->id,$details,$lead->emirates,$sms_data);
+        // ChatController::MySMSMachine($lead->id,$uk->agent_code, $sms_data);
+
+
+
+        // {{route('view.lead',$detail['lead_id'])}}
+        // url to open lead";
+
+
+        // if(auth()->user()->role != 'sale')
+        // event(new MyEvent($remarks, $request->saler_id,$request->id,$uk->agent_code));
+        // else
+        // return "Zoom
+        return view('admin.chat.chat-load', compact('data'));
+    }
+    //
 }
