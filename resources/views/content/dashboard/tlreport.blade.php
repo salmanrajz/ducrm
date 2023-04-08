@@ -36,7 +36,6 @@
     <!--/ Medal Card -->
 
     <!-- Statistics Card -->
-    @role('Manager')
      <div class="table-responsive">
                     <table class="table-bordered text-center" style="font-weight:400;">
                         @inject('provider', 'App\Http\Controllers\FunctionController')
@@ -61,7 +60,7 @@
                                 <th>Remainig</th>
                                 <th>Forecast</th>
                                 <th>All Lead</th>
-                                <th>In Process</th>
+                                <th>Verified</th>
                                 {{-- <th>Activated</th>
                                 <th>MNP Activated</th>
                                 <th>Verified</th>
@@ -75,7 +74,7 @@
                         </thead>
                         <tbody>
                             @php
-                            $numberOfAgent = \App\Models\User::where('agent_code',auth()->user()->agent_code)->where('role','Sale')->get();
+                            // $numberOfAgent = \App\Models\User::where('agent_code',auth()->user()->agent_code)->where('role','Sale')->get();
                             @endphp
                             @foreach ($numberOfAgent as $key => $agent)
                             {{-- {{$k == 1}} --}}
@@ -117,7 +116,7 @@
                                     {{$ach = $provider::userwise_target($agent->id,\Carbon\Carbon::today(),'daily')}}
                                 </td>
                                 <td style="background:#6363d2;color:#fff">
-                                    {{$ach = $provider::inprocesslead($agent->id,\Carbon\Carbon::today(),'1.08')}}
+                                    {{$ach = $provider::TLVeri($agent->id,\Carbon\Carbon::today(),'1.08')}}
                                 </td>
 
                                 {{-- <td>
@@ -133,7 +132,7 @@
                             <tr>
                                 <td colspan="7">
                                     Total :
-                                    {{$finalTotal = $provider::cctotal(auth()->user()->agent_code,\Carbon\Carbon::today(),'daily')}}
+                                    {{$finalTotal = $provider::cctotaltl($tlid,\Carbon\Carbon::today(),'daily')}}
                                 </td>
 
                             </tr>
@@ -178,7 +177,7 @@
                         </thead>
                         <tbody>
                             @php
-                            $numberOfAgent = \App\Models\User::where('agent_code',auth()->user()->agent_code)->where('role','Sale')->get();
+                            // $numberOfAgent = \App\Models\User::where('agent_code',auth()->user()->agent_code)->where('role','Sale')->get();
                             @endphp
                             @foreach ($numberOfAgent as $key => $agent)
                             {{-- {{$k == 1}} --}}
@@ -193,16 +192,16 @@
                                     {{$usertarget = 12}}
                                 </td>
                                 <td style="background:#6363d2;color:#fff">
-                                    {{$ach = $provider::userwise_target($agent->id,\Carbon\Carbon::now()->month(),'monthly')}}
+                                    {{$ach = $provider::userwise_target($agent->id,\Carbon\Carbon::now()->month,'monthly')}}
                                 </td>
                                 <td style="background:#6363d2;color:#fff">
-                                    {{$p2p = $provider::userwise_targetBatch('p2p',$agent->id,\Carbon\Carbon::now()->month(),'monthly')}}
+                                    {{$p2p = $provider::userwise_targetBatch('p2p',$agent->id,\Carbon\Carbon::now()->month,'monthly')}}
                                 </td>
                                 <td style="background:#6363d2;color:#fff">
-                                    {{$hw = $provider::userwise_targetBatch('HomeWifi',$agent->id,\Carbon\Carbon::now()->month(),'monthly')}}
+                                    {{$hw = $provider::userwise_targetBatch('HomeWifi',$agent->id,\Carbon\Carbon::now()->month,'monthly')}}
                                 </td>
                                 <td style="background:#6363d2;color:#fff">
-                                    {{$mnp = $provider::userwise_targetBatch('MNP',$agent->id,\Carbon\Carbon::now()->month(),'monthly')}}
+                                    {{$mnp = $provider::userwise_targetBatch('MNP',$agent->id,\Carbon\Carbon::now()->month,'monthly')}}
                                 </td>
                                 <td>
                                     {{$usertarget - $ach}}
@@ -217,10 +216,10 @@
                                     @endphp
                                 </td>
                                 <td style="background:#6363d2;color:#fff">
-                                    {{$ach = $provider::userwise_target($agent->id,\Carbon\Carbon::now()->month(),'monthly')}}
+                                    {{$ach = $provider::userwise_target($agent->id,\Carbon\Carbon::now()->month,'monthly')}}
                                 </td>
                                 <td style="background:#6363d2;color:#fff">
-                                    {{$ach = $provider::inprocesslead($agent->id,\Carbon\Carbon::now()->month(),'1.08')}}
+                                    {{$ach = $provider::inprocesslead($agent->id,\Carbon\Carbon::now()->month,'1.08')}}
                                 </td>
 
                                 {{-- <td>
@@ -235,437 +234,18 @@
                         <tfoot>
                             <tr>
                                 <td colspan="7">
-                                    Total :
-                                    {{$finalTotal = $provider::cctotal(auth()->user()->agent_code,\Carbon\Carbon::now()->month(),'daily')}}
+                                    Totals :
+                                    {{$finalTotal = $provider::cctotaltl($tlid,\Carbon\Carbon::now()->month,'monthly')}}
                                 </td>
 
                             </tr>
                         </tfoot>
                     </table>
                 </div>
-    @endrole
-    @role('Sale')
-    @inject('provider', 'App\Http\Controllers\FunctionController')
-    @foreach ($product as $item)
-
-    <div class="col-xl-12 col-md-6 col-12">
-      <div class="card card-statistics">
-        <div class="card-header">
-          <h4 class="card-title">{{$item->name}} Dashboard</h4>
-          <div class="d-flex align-items-center">
-            <p class="card-text font-small-2 me-25 mb-0">Updated few minutes ago</p>
-          </div>
-        </div>
-        <div class="card-body statistics-body">
-          <div class="row">
-            <div class="col-xl-2 col-sm-6 col-12 mb-2 mb-xl-0">
-              <div class="d-flex flex-row">
-                <div class="avatar bg-light-primary me-2">
-                    <img src="{{asset('images/du-icons/pending.png')}}" alt="Pending" style="height:50px">
-                  {{-- <div class="avatar-content">
-                    <i data-feather="trending-up" class="avatar-icon"></i>
-                  </div> --}}
-                </div>
-                <div class="my-auto">
-                  <h4 class="fw-bolder mb-0">
-                        {{$provider::PendingSaleAgent('1.01',$item->name)}}
-                  </h4>
-                  <p class="card-text font-small-3 mb-0">Pending</p>
-                </div>
-              </div>
-            </div>
-            <div class="col-xl-2 col-sm-6 col-12 mb-2 mb-xl-0">
-              <div class="d-flex flex-row">
-                <div class="avatar bg-light-info me-2">
-                    <img src="{{asset('images/du-icons/verified.png')}}" alt="Pending" style="height:50px">
-
-                  {{-- <div class="avatar-content">
-                    <i data-feather="user" class="avatar-icon"></i>
-                  </div> --}}
-                </div>
-                <div class="my-auto">
-                  <h4 class="fw-bolder mb-0">
-                        {{$provider::InProcessSaleAgent('1.08',$item->name)}}
-                  </h4>
-                  <p class="card-text font-small-3 mb-0">Verified</p>
-                </div>
-              </div>
-            </div>
-            <div class="col-xl-2 col-sm-6 col-12 mb-2 mb-sm-0">
-              <div class="d-flex flex-row">
-                <div class="avatar bg-light-danger me-2">
-                  {{-- <div class="avatar-content">
-                    <i data-feather="box" class="avatar-icon"></i>
-                  </div> --}}
-                    <img src="{{asset('images/du-icons/in-process.png')}}" alt="Pending" style="height:50px">
-
-                </div>
-                <div class="my-auto">
-                  <h4 class="fw-bolder mb-0">
-                        {{$provider::PendingSaleAgent('1.08',$item->name)}}
-
-                  </h4>
-                  <p class="card-text font-small-3 mb-0">Follow Up</p>
-                </div>
-              </div>
-            </div>
-            <div class="col-xl-2 col-sm-6 col-12 mb-2 mb-sm-0">
-              <div class="d-flex flex-row">
-                <div class="avatar bg-light-danger me-2">
-                  {{-- <div class="avatar-content">
-                    <i data-feather="box" class="avatar-icon"></i>
-                  </div> --}}
-                    <img src="{{asset('images/du-icons/follow-up.png')}}" alt="Pending" style="height:50px">
-
-                </div>
-                <div class="my-auto">
-                  <h4 class="fw-bolder mb-0">
-                        {{$provider::PendingSaleAgent('1.19',$item->name)}}
-
-                  </h4>
-                  <p class="card-text font-small-3 mb-0">In Process</p>
-                </div>
-              </div>
-            </div>
-            <div class="col-xl-2 col-sm-6 col-12">
-              <div class="d-flex flex-row">
-                <div class="avatar bg-light-success me-2">
-                  {{-- <div class="avatar-content">
-                    <i data-feather="dollar-sign" class="avatar-icon"></i>
-                  </div> --}}
-                    <img src="{{asset('images/du-icons/active.png')}}" alt="Pending" style="height:50px">
-
-                </div>
-                <div class="my-auto">
-                  <h4 class="fw-bolder mb-0">
-                        {{$provider::PendingSaleAgent('1.02',$item->name)}}
-
-                  </h4>
-                  <p class="card-text font-small-3 mb-0">Active</p>
-                </div>
-              </div>
-            </div>
-            <div class="col-xl-2 col-sm-6 col-12">
-              <div class="d-flex flex-row">
-                <div class="avatar bg-light-success me-2">
-                  {{-- <div class="avatar-content">
-                    <i data-feather="dollar-sign" class="avatar-icon"></i>
-                  </div> --}}
-                    <img src="{{asset('images/du-icons/reject.png')}}" alt="Pending" style="height:50px">
-
-                </div>
-                <div class="my-auto">
-                  <h4 class="fw-bolder mb-0">
-                        {{$provider::PendingSaleAgent('1.15',$item->name)}}
-
-                  </h4>
-                  <p class="card-text font-small-3 mb-0">Reject</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    @endforeach
-
-    @endrole
-    @role('Verification')
-    @inject('provider', 'App\Http\Controllers\FunctionController')
-    <div class="col-xl-12 col-md-6 col-12">
-      <div class="card card-statistics">
-        <div class="card-header">
-          <h4 class="card-title">Verification Dashboard</h4>
-          <div class="d-flex align-items-center">
-            <p class="card-text font-small-2 me-25 mb-0">Updated few minutes ago</p>
-          </div>
-        </div>
-        <div class="card-body statistics-body">
-          <div class="row">
-            <div class="col-xl-2 col-sm-6 col-12 mb-2 mb-xl-0">
-              <div class="d-flex flex-row" onclick="window.location.href='{{route('wifi.leads')}}'">
-                <div class="avatar bg-light-primary me-2">
-                  {{-- <div class="avatar-content">
-                    <i data-feather="trending-up" class="avatar-icon"></i>
-                  </div> --}}
-                    <img src="{{asset('images/du-icons/pending.png')}}" alt="Pending" style="height:50px">
-
-                </div>
-                <div class="my-auto">
-                  <h4 class="fw-bolder mb-0">
-                        {{$provider::PendingVerification('1.01')}}
-                  </h4>
-                  <p class="card-text font-small-3 mb-0">Pending</p>
-                </div>
-              </div>
-            </div>
-            <div class="col-xl-2 col-sm-6 col-12 mb-2 mb-xl-0">
-              <div class="d-flex flex-row">
-                <div class="avatar bg-light-info me-2">
-                  {{-- <div class="avatar-content">
-                    <i data-feather="user" class="avatar-icon"></i>
-                  </div> --}}
-                    <img src="{{asset('images/du-icons/verified.png')}}" alt="Pending" style="height:50px">
-
-                </div>
-                <div class="my-auto">
-                  <h4 class="fw-bolder mb-0">
-                        {{$provider::PendingVerification('Verify')}}
-
-                  </h4>
-                  <p class="card-text font-small-3 mb-0">Verified</p>
-                </div>
-              </div>
-            </div>
-
-
-          </div>
-        </div>
-      </div>
-    </div>
-    @endrole
-    @role('Activator')
-    @inject('provider', 'App\Http\Controllers\FunctionController')
-    {{--  --}}
-        <div class="col-xl-12 col-md-6 col-12">
-            <div class="card card-statistics">
-                <div class="card-header">
-                <h4 class="card-title">HW Dashboard</h4>
-                <div class="d-flex align-items-center">
-                    <p class="card-text font-small-2 me-25 mb-0">Updated few minutes ago</p>
-                </div>
-                </div>
-                <div class="card-body statistics-body">
-                <div class="row">
-                    <div class="col-xl-2 col-sm-6 col-12 mb-2 mb-xl-0">
-                    <div class="d-flex flex-row" onclick="window.location.href='{{route('ViewInProcessLead')}}'">
-                        <div class="avatar bg-light-primary me-2">
-                            <img src="{{asset('images/du-icons/pending.png')}}" alt="Pending" style="height:50px">
-                        {{-- <div class="avatar-content">
-                            <i data-feather="trending-up" class="avatar-icon"></i>
-                        </div> --}}
-                        </div>
-                        <div class="my-auto">
-                        <h4 class="fw-bolder mb-0">
-                                {{$provider::PendingVerification('1.05')}}
-                                {{-- {{$provider::PendingSaleAgent('1.01','HomeWifi')}} --}}
-                        </h4>
-                        <p class="card-text font-small-3 mb-0">Pending</p>
-                        </div>
-                    </div>
-                    </div>
-                    {{--  --}}
-                    <div class="col-xl-2 col-sm-6 col-12 mb-2 mb-sm-0">
-                    <div class="d-flex flex-row" onclick="window.location.href='{{route('inprocessleadhomewifi')}}'">
-                        <div class="avatar bg-light-danger me-2">
-                        {{-- <div class="avatar-content">
-                            <i data-feather="box" class="avatar-icon"></i>
-                        </div> --}}
-                            <img src="{{asset('images/du-icons/follow-up.png')}}" alt="Pending" style="height:50px">
-
-                        </div>
-                        <div class="my-auto">
-                        <h4 class="fw-bolder mb-0">
-                                {{$provider::PendingVerificationActivator('1.08','HomeWifi')}}
-                                {{-- {{$provider::PendingSaleAgent('1.19','HomeWifi')}} --}}
-
-                        </h4>
-                        <p class="card-text font-small-3 mb-0">In Process</p>
-                        </div>
-                    </div>
-                    </div>
-                    <div class="col-xl-2 col-sm-6 col-12">
-                    <div class="d-flex flex-row">
-                        <div class="avatar bg-light-success me-2">
-                        {{-- <div class="avatar-content">
-                            <i data-feather="dollar-sign" class="avatar-icon"></i>
-                        </div> --}}
-                            <img src="{{asset('images/du-icons/active.png')}}" alt="Pending" style="height:50px">
-
-                        </div>
-                        <div class="my-auto">
-                        <h4 class="fw-bolder mb-0">
-                                {{$provider::PendingVerificationActivator('1.02','HomeWifi')}}
-
-                                {{-- {{$provider::PendingSaleAgent('1.02','HomeWifi')}} --}}
-
-                        </h4>
-                        <p class="card-text font-small-3 mb-0">Active</p>
-                        </div>
-                    </div>
-                    </div>
-                    <div class="col-xl-2 col-sm-6 col-12">
-                    <div class="d-flex flex-row">
-                        <div class="avatar bg-light-success me-2">
-                        {{-- <div class="avatar-content">
-                            <i data-feather="dollar-sign" class="avatar-icon"></i>
-                        </div> --}}
-                            <img src="{{asset('images/du-icons/reject.png')}}" alt="Pending" style="height:50px">
-
-                        </div>
-                        <div class="my-auto">
-                        <h4 class="fw-bolder mb-0">
-                                {{$provider::PendingVerificationActivator('1.15','HomeWifi')}}
-
-                                {{-- {{$provider::PendingSaleAgent('1.15','HomeWifi')}} --}}
-
-                        </h4>
-                        <p class="card-text font-small-3 mb-0">Reject</p>
-                        </div>
-                    </div>
-                    </div>
-                </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-12 col-md-6 col-12">
-            <div class="card card-statistics">
-                <div class="card-header">
-                <h4 class="card-title">Postpaid Dashboard</h4>
-                <div class="d-flex align-items-center">
-                    <p class="card-text font-small-2 me-25 mb-0">Updated few minutes ago</p>
-                </div>
-                </div>
-                <div class="card-body statistics-body">
-                <div class="row">
-                    <div class="col-xl-2 col-sm-6 col-12 mb-2 mb-xl-0">
-                    <div class="d-flex flex-row" onclick="window.location.href='{{route('ViewInProcessLead')}}'">
-                        <div class="avatar bg-light-primary me-2">
-                            <img src="{{asset('images/du-icons/pending.png')}}" alt="Pending" style="height:50px">
-                        {{-- <div class="avatar-content">
-                            <i data-feather="trending-up" class="avatar-icon"></i>
-                        </div> --}}
-                        </div>
-                        <div class="my-auto">
-                        <h4 class="fw-bolder mb-0">
-                                {{$provider::PendingVerification('1.05')}}
-                                {{-- {{$provider::PendingSaleAgent('1.01','HomeWifi')}} --}}
-                        </h4>
-                        <p class="card-text font-small-3 mb-0">Pending</p>
-                        </div>
-                    </div>
-                    </div>
-                    {{--  --}}
-                    <div class="col-xl-2 col-sm-6 col-12 mb-2 mb-sm-0">
-                    <div class="d-flex flex-row" onclick="window.location.href='{{route('inprocesslead')}}'">
-                        <div class="avatar bg-light-danger me-2">
-                        {{-- <div class="avatar-content">
-                            <i data-feather="box" class="avatar-icon"></i>
-                        </div> --}}
-                            <img src="{{asset('images/du-icons/follow-up.png')}}" alt="Pending" style="height:50px">
-
-                        </div>
-                        <div class="my-auto">
-                        <h4 class="fw-bolder mb-0">
-                                {{$provider::PendingVerificationActivator('1.08','Postpaid')}}
-                                {{-- {{$provider::PendingSaleAgent('1.19','HomeWifi')}} --}}
-
-                        </h4>
-                        <p class="card-text font-small-3 mb-0">In Process</p>
-                        </div>
-                    </div>
-                    </div>
-                    <div class="col-xl-2 col-sm-6 col-12">
-                    <div class="d-flex flex-row">
-                        <div class="avatar bg-light-success me-2">
-                        {{-- <div class="avatar-content">
-                            <i data-feather="dollar-sign" class="avatar-icon"></i>
-                        </div> --}}
-                            <img src="{{asset('images/du-icons/active.png')}}" alt="Pending" style="height:50px">
-
-                        </div>
-                        <div class="my-auto">
-                        <h4 class="fw-bolder mb-0">
-                                {{$provider::PendingVerificationActivator('1.02','Postpaid')}}
-
-                                {{-- {{$provider::PendingSaleAgent('1.02','HomeWifi')}} --}}
-
-                        </h4>
-                        <p class="card-text font-small-3 mb-0">Active</p>
-                        </div>
-                    </div>
-                    </div>
-                    <div class="col-xl-2 col-sm-6 col-12 mb-2 mb-xl-0">
-              <div class="d-flex flex-row" onclick="window.location.href='{{route('mnpprocesslead')}}'">
-                <div class="avatar bg-light-primary me-2">
-                  {{-- <div class="avatar-content">
-                    <i data-feather="trending-up" class="avatar-icon"></i>
-                  </div> --}}
-                    <img src="{{asset('images/du-icons/in-process.png')}}" alt="Pending" style="height:50px">
-
-                </div>
-                <div class="my-auto">
-                  <h4 class="fw-bolder mb-0">
-                        {{$provider::PendingVerification('1.11')}}
-                  </h4>
-                  <p class="card-text font-small-3 mb-0">MNP Pre Process</p>
-                </div>
-              </div>
-            </div>
-                    <div class="col-xl-2 col-sm-6 col-12">
-                    <div class="d-flex flex-row">
-                        <div class="avatar bg-light-success me-2">
-                        {{-- <div class="avatar-content">
-                            <i data-feather="dollar-sign" class="avatar-icon"></i>
-                        </div> --}}
-                            <img src="{{asset('images/du-icons/reject.png')}}" alt="Pending" style="height:50px">
-
-                        </div>
-                        <div class="my-auto">
-                        <h4 class="fw-bolder mb-0">
-                                {{$provider::PendingVerificationActivator('1.15','Postpaid')}}
-
-                                {{-- {{$provider::PendingSaleAgent('1.15','HomeWifi')}} --}}
-
-                        </h4>
-                        <p class="card-text font-small-3 mb-0">Reject</p>
-                        </div>
-                    </div>
-                    </div>
-                </div>
-                </div>
-            </div>
-        </div>
-    {{--  --}}
-
-    @endrole
-    @role('Designer')
-    @inject('provider', 'App\Http\Controllers\FunctionController')
-    <div class="col-xl-12 col-md-6 col-12">
-      <div class="card card-statistics">
-        <div class="card-header">
-          <h4 class="card-title">Designing Dashboard</h4>
-          <div class="d-flex align-items-center">
-            <p class="card-text font-small-2 me-25 mb-0">Updated few minutes ago</p>
-          </div>
-        </div>
-        <div class="card-body statistics-body">
-          <div class="row">
-            <div class="col-xl-2 col-sm-6 col-12 mb-2 mb-xl-0">
-              <div class="d-flex flex-row" onclick="window.location.href='{{route('all_lead_designer')}}'">
-                <div class="avatar bg-light-primary me-2">
-                  {{-- <div class="avatar-content">
-                    <i data-feather="trending-up" class="avatar-icon"></i>
-                  </div> --}}
-                    <img src="{{asset('images/du-icons/pending.png')}}" alt="Pending" style="height:50px">
-
-                </div>
-                <div class="my-auto">
-                  <h4 class="fw-bolder mb-0">
-                        {{$provider::PendingVerification('1.13')}}
-                  </h4>
-                  <p class="card-text font-small-3 mb-0">Pending</p>
-                </div>
-              </div>
-            </div>
 
 
 
-          </div>
-        </div>
-      </div>
-    </div>
-    @endrole
+
     <!--/ Statistics Card -->
   </div>
 

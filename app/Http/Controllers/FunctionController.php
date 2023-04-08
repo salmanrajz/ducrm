@@ -21,7 +21,7 @@ class FunctionController extends Controller
     // public function userwise_target(R)
     public static function userwise_target($id, $month,$wise)
     {
-        // return $id;
+        // return $month;
         return $active = lead_sale::select('lead_sales.id')
         ->LeftJoin(
             'users',
@@ -34,11 +34,11 @@ class FunctionController extends Controller
             ->where('users.id', $id)
             ->when($wise, function ($query) use ($wise, $month) {
                 if ($wise == 'daily') {
-                    $query->whereMonth('lead_sales.updated_at', $month);
+                    $query->whereDate('lead_sales.updated_at', Carbon::today());
                     // ->whereYear('lead_sales.created_at', Carbon::now()->year)
                 } else {
-                    $query->whereMonth('lead_sales.updated_at', $month)
-                        ->whereYear('lead_sales.created_at', Carbon::now()->year);
+                    $query->whereMonth('lead_sales.updated_at', Carbon::now()->month)
+                            ->whereYear('lead_sales.created_at', Carbon::now()->year);
                     // return $query->where('users.agent_code', $id);
                 }
             })
@@ -64,14 +64,14 @@ class FunctionController extends Controller
             // ->whereIn('lead_sales.channel_type', ['TTF','ExpressDial','MWH','Ideacorp'])
             ->where('users.id', $id)
             ->when($wise, function ($query) use ($wise, $month) {
-                if ($wise == 'daily') {
-                    $query->whereMonth('lead_sales.updated_at', $month);
-                    // ->whereYear('lead_sales.created_at', Carbon::now()->year)
-                } else {
-                    $query->whereMonth('lead_sales.updated_at', $month)
-                        ->whereYear('lead_sales.created_at', Carbon::now()->year);
-                    // return $query->where('users.agent_code', $id);
-                }
+            if ($wise == 'daily') {
+                $query->whereDate('lead_sales.updated_at', Carbon::today());
+                // ->whereYear('lead_sales.created_at', Carbon::now()->year)
+            } else {
+                $query->whereMonth('lead_sales.updated_at', Carbon::now()->month)
+                    ->whereYear('lead_sales.created_at', Carbon::now()->year);
+                // return $query->where('users.agent_code', $id);
+            }
             })
             // ->whereMonth('lead_sales.updated_at', $month)
             // ->whereYear('lead_sales.created_at', Carbon::now()->year)
@@ -80,6 +80,23 @@ class FunctionController extends Controller
         // ->whereIn('lead_sales.channel_type', ['TTF','ExpressDial','MWH','Ideacorp'])
         // ->whereBetween('date_time', [$today->startOfMonth(), $today->endOfMonth])
         // ->where('users.id', $id)
+    }
+    //
+    public static function TLVeri($id,$month,$status){
+        return $active = lead_sale::select('lead_sales.id')
+            ->LeftJoin(
+                'users',
+                'users.id',
+                'lead_sales.saler_id'
+            )
+            ->whereIn('lead_sales.status', ['1.05','1.08','1.11'])
+            // ->where('lead_sales.lead_type', $status)
+            // ->whereIn('lead_sales.channel_type', ['TTF','ExpressDial','MWH','Ideacorp'])
+            ->where('users.id', $id)
+            ->whereDate('lead_sales.updated_at', $month)
+            // ->whereYear('lead_sales.created_at', Carbon::now()->year)
+            ->get()
+            ->count();
     }
     //
     public static function inprocesslead($id, $month,$status)
@@ -118,14 +135,45 @@ class FunctionController extends Controller
             // ->whereIn('lead_sales.channel_type', ['TTF','ExpressDial','MWH','Ideacorp'])
             ->where('users.agent_code', $id)
             ->when($wise, function ($query) use ($wise, $month) {
-                if ($wise == 'daily') {
-                    $query->whereMonth('lead_sales.updated_at', $month);
-                    // ->whereYear('lead_sales.created_at', Carbon::now()->year)
-                } else {
-                    $query->whereMonth('lead_sales.updated_at', $month)
-                        ->whereYear('lead_sales.created_at', Carbon::now()->year);
-                    // return $query->where('users.agent_code', $id);
-                }
+            if ($wise == 'daily') {
+                $query->whereDate('lead_sales.updated_at', Carbon::today());
+                // ->whereYear('lead_sales.created_at', Carbon::now()->year)
+            } else {
+                $query->whereMonth('lead_sales.updated_at', Carbon::now()->month)
+                    ->whereYear('lead_sales.created_at', Carbon::now()->year);
+                // return $query->where('users.agent_code', $id);
+            }
+            })
+            // ->whereMonth('lead_sales.updated_at', $month)
+            // ->whereYear('lead_sales.created_at', Carbon::now()->year)
+            ->get()
+            ->count();
+        // ->whereIn('lead_sales.channel_type', ['TTF','ExpressDial','MWH','Ideacorp'])
+        // ->whereBetween('date_time', [$today->startOfMonth(), $today->endOfMonth])
+        // ->where('users.id', $id)
+    }
+    public static function cctotaltl($id, $month,$wise)
+    {
+        // return $id;
+        return $active = lead_sale::select('lead_sales.id')
+        ->LeftJoin(
+            'users',
+            'users.id',
+            'lead_sales.saler_id'
+        )
+            ->whereIn('lead_sales.status', ['1.02'])
+            // ->where('lead_sales.lead_type', $status)
+            // ->whereIn('lead_sales.channel_type', ['TTF','ExpressDial','MWH','Ideacorp'])
+            ->where('users.teamleader', $id)
+            ->when($wise, function ($query) use ($wise, $month) {
+            if ($wise == 'daily') {
+                $query->whereDate('lead_sales.updated_at', Carbon::today());
+                // ->whereYear('lead_sales.created_at', Carbon::now()->year)
+            } else {
+                $query->whereMonth('lead_sales.updated_at', Carbon::now()->month)
+                    ->whereYear('lead_sales.created_at', Carbon::now()->year);
+                // return $query->where('users.agent_code', $id);
+            }
             })
             // ->whereMonth('lead_sales.updated_at', $month)
             // ->whereYear('lead_sales.created_at', Carbon::now()->year)

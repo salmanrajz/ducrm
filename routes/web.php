@@ -376,6 +376,7 @@ Route::group(['prefix' => 'activator','middleware'=>'auth'], function () {
 Route::group(['prefix' => 'report','middleware'=>'auth'], function () {
     //    ROLE
     Route::get('tl-card', [ReportController::class, 'tlcard'])->name('tl.scorecard');
+    Route::get('tl-report/{id}', [ReportController::class, 'tlreport'])->name('tlreport');
     Route::get('main-report', [ReportController::class, 'mainreport'])->name('main.report');
     //    ROLE
 });

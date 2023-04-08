@@ -9,6 +9,7 @@ use App\Models\lead_sale;
 use App\Models\main_data_manager_assigner;
 use App\Models\main_data_user_assigner;
 use App\Models\MissionDU;
+use App\Models\product;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -17,6 +18,29 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class ReportController extends Controller
 {
+    //
+    public function tlcard(Request $request){
+        $breadcrumbs = [
+            [
+                'link' => "/", 'name' => "Home"
+            ], ['link' => "javascript:void(0)", 'name' => "Main Daily | Monthly Report"]
+        ];
+        // $cc = call_center::where('status', 1)->get();
+        $numberOfAgent = \App\Models\User::where('role', 'TeamLeader')->get();
+        return view('admin.report.tl-card', compact('breadcrumbs', 'numberOfAgent'));
+
+    }
+    // /
+    public function tlreport(Request $request){
+        //
+        // return "s";
+        $pageConfigs = ['pageHeader' => false];
+        $product = product::where('status', 1)->get();
+        $numberOfAgent = \App\Models\User::where('teamleader',$request->id)->where('role', 'Sale')->get();
+        $tlid = $request->id;
+        return view('/content/dashboard/tlreport', ['pageConfigs' => $pageConfigs, 'product' => $product, 'numberOfAgent' => $numberOfAgent, 'tlid'=> $tlid]);
+        //
+    }
     //
     public function mainreport(Request $request){
         // return $request;
@@ -148,14 +172,15 @@ class ReportController extends Controller
 
         $data = User::whereIn('email', ['fozia@cl1.com'])->get();
         foreach($data as $d2){
-             $zp = main_data_user_assigner::where('status','No Answer')
+             $zp = main_data_user_assigner::where('status','Not Interested')
+            //  $zp = main_data_user_assigner::whereNull('status')
                 // ->whereDate('updated_at', Carbon::yesterday())
-                ->whereBetween(
-                    'updated_at',
-                    [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]
-                )
+                // ->whereBetween(
+                //     'updated_at',
+                //     [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]
+                // )
 
-            // ->whereMonth('created_at', Carbon::now()->month)
+            ->whereMonth('created_at', Carbon::now()->month)
             ->OrderBy('id','desc')->get();
             foreach($zp as $zp2){
                  $zp3 = main_data_manager_assigner::where('number_id',$zp2->number_id)->OrderBy('id', 'asc')->first();

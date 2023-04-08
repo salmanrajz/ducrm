@@ -669,8 +669,8 @@ class NumberAssigner extends Controller
         // $NumberCount = number_assigner::select('number_assigners.*')->where('status', '0')->whereNull('manager_id')->take(1000)->count();
         $b = WhatsAppMnpBank::select('whats_app_mnp_banks.*')->where('is_status', '0')
         ->whereIn('data_valid_from', ['RegionAUHFriday', 'DNCRP2P','AAMTMarch','19DUDNCAED'])
-        ->whereIn('soft_dnd', ['54', '054','056','56','50','050'])
-            // ->whereIn('soft_dnd', ['58', '058','055','55','52','052'])
+        // ->whereIn('soft_dnd', ['54', '054','056','56','50','050'])
+            ->whereIn('soft_dnd', ['58', '058','055','55','52','052'])
 
         ->limit(500)->groupby('whats_app_mnp_banks.number')
         ->inRandomOrder()->get();

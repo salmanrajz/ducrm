@@ -52,7 +52,7 @@
                     <h4 class="card-title">Lead Information</h4>
                 </div>
                 <div class="card-body">
-                    <form class="form form-vertical" id="MyRoleForm">
+                    <form class="form form-vertical" id="MyRoleForm" onsubmit="return false">
                         <div class="col-md-6 col-sm-6 col-xs-12 form-group ">
                             <input type="hidden" name="generic_id"
                                 value="{{ $getfirst = empty($last)? 1 : $last->id }}">
